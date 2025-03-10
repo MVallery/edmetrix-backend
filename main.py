@@ -4,16 +4,16 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "mysql://oneira:oneirapwd1!@localhost/oneira_db"
+DATABASE_URL = "mysql://root:rootpwd@localhost/edmetrix_db"
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
-class DreamSign(Base):
-    __tablename__ = "dream_signs"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), unique=True, index=True)
+# class DreamSign(Base):
+#     __tablename__ = "dream_signs"
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String(255), unique=True, index=True)
 
 app = FastAPI()
 app.add_middleware(
