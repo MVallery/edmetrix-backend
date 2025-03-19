@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, Text
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional, Dict
 
-class Subject(Base):
+class Subject(SQLModel, table=True):
     __tablename__ = "subject"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text(255))
-    color = Column(Text(10))
+    id: Optional[int]= Field(primary_key=True, index=True)
+    name: str = Field(max_length=255)
