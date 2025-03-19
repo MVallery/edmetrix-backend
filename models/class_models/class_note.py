@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
-from ..base import Base
+from sqlmodel import Field, SQLModel
+from typing import Optional
 
-class Class_Note(Base):
+class ClassNote(SQLModel, table=True):
     __tablename__ = "class_note"
-    id = Column(Integer, primary_key=True, index=True)
-    text = Column(Text(255))
-    order = Column(Integer)
-    class_id = Column(ForeignKey('class.id'))
-    created = Column(Text(255))
-    updated = Column(Text(255))
-    type = Column(Text(255)) # academic / behavior / general
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    text: Optional[str] = Field(default=None, max_length=255)
+    order: Optional[int] = None
+    class_id: Optional[int] = Field(default=None, foreign_key="class.id")
+    created: Optional[str] = Field(default=None, max_length=255)
+    updated: Optional[str] = Field(default=None, max_length=255)
+    type: Optional[str] = Field(default=None, max_length=255)  # academic / behavior / general

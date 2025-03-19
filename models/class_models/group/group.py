@@ -1,10 +1,9 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
-from ...base import Base
+from sqlmodel import Field, SQLModel
 
-class Group(Base):
+class Group(SQLModel, table=True):
     __tablename__ = "group"
-    id = Column(Integer, primary_key=True, index=True)
-    status = Column(Text(255)) # active / inactive
-    name = Column(Text(255))
-    description = Column(Text(255))
-    class_id = Column(ForeignKey('class.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    status: str = Field(max_length=255)  # active / inactive
+    name: str = Field(max_length=255)
+    description: str = Field(max_length=255)
+    class_id: int = Field(foreign_key="class.id")

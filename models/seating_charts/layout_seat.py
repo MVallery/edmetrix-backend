@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
-from ..base import Base
-# Blank Seat positions in the layout that students can be dragged to
-class LayoutSeat(Base):
+from sqlmodel import SQLModel, Field
+from typing import Optional
+
+class LayoutSeat(SQLModel, table=True):
   __tablename__ = "layout_seat"
-  id = Column(Integer, primary_key=True, index=True)
-  layout_id = ForeignKey('layout.id')
-  x = Column(Integer)
-  y = Column(Integer)
-  layout_group_id = Column(ForeignKey('layout_group.id'))
+
+  id: Optional[int] = Field(default=None, primary_key=True, index=True)
+  layout_id: int = Field(foreign_key="layout.id")
+  col: int
+  row: int
+  layout_group_id: Optional[int] = Field(default=None, foreign_key="layout_group.id")

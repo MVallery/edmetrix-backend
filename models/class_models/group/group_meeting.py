@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
-from ...base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Group_Meeting(Base):
+class GroupMeeting(SQLModel, table=True):
     __tablename__ = "group_meeting"
-    id = Column(Integer, primary_key=True, index=True)
-    date = Column(Text(255))
-    group_id = Column(ForeignKey('group.id'))
-    notes = Column(Text(255))
-    created = Column(Text(255))
-    time = Column(Text(5))
-    minutes = Column(Text(2))
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    date: Optional[str] = Field(default=None, max_length=255)
+    group_id: Optional[int] = Field(default=None, foreign_key="group.id")
+    notes: Optional[str] = Field(default=None, max_length=255)
+    created: Optional[str] = Field(default=None, max_length=255)
+    time: Optional[str] = Field(default=None, max_length=5)
+    minutes: Optional[str] = Field(default=None, max_length=2)

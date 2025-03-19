@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
 
-class Unit_Standard(Base):
+class UnitStandard(SQLModel, table=True):
     __tablename__ = "unit_standard"
-    id = Column(Integer, primary_key=True, index=True)
-    standard_id = Column(ForeignKey('standard.id'))
-    unit_id = Column(ForeignKey('unit.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    standard_id: int = Field(foreign_key="standard.id")
+    unit_id: int = Field(foreign_key="unit.id")

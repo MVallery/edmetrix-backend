@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
-from ...base import Base
+from sqlmodel import Field, SQLModel
+
 # Current concepts tagged for that particular group to work on
-class Group_Concept(Base):
+class GroupConcept(SQLModel, table=True):
     __tablename__ = "group_concept"
-    id = Column(Integer, primary_key=True, index=True)
-    group_id = Column(ForeignKey('group.id'))
-    concept_id = Column(ForeignKey('concept.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    group_id: int = Field(foreign_key="group.id")
+    concept_id: int = Field(foreign_key="concept.id")

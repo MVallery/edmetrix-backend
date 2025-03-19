@@ -1,9 +1,10 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Student_Note(Base):
+class StudentNote(SQLModel, table=True):
     __tablename__ = "student_note"
-    id = Column(Integer, primary_key=True, index=True)
-    student_id = Column(ForeignKey('student.id'))
-    text = Column(Text(255))
-    color = Column(Text(10))
+
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    student_id: int = Field(foreign_key="student.id")
+    text: str
+    color: Optional[str] = Field(default=None, max_length=10)

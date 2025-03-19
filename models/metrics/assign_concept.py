@@ -1,9 +1,9 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Assign_Concept(Base):
+class AssignConcept(SQLModel, table=True):
     __tablename__ = "assign_concept"
-    id = Column(Integer, primary_key=True, index=True)
-    concept_id = Column(ForeignKey('concept.id'))
-    assign_id = Column(ForeignKey('assign.id'))
 
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    concept_id: int = Field(foreign_key="concept.id")
+    assign_id: int = Field(foreign_key="assign.id")

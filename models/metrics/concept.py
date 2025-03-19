@@ -1,11 +1,9 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import Field, SQLModel, Relationship
+from typing import Optional
 
-class Concept(Base):
+class Concept(SQLModel, table=True):
     __tablename__ = "concept"
-    id = Column(Integer, primary_key=True, index=True)
-    parent_concept_id = Column(ForeignKey('concept.id'))
-    name = Column(Text(255))
-    description = Column(Text(255))
-
-
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    parent_concept_id: Optional[int] = Field(default=None, foreign_key="concept.id")
+    name: Optional[str] = Field(default=None, max_length=255)
+    description: Optional[str] = Field(default=None, max_length=255)

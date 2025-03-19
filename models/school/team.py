@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Team(Base):
+class Team(SQLModel, table=True):
     __tablename__ = "team"
-    id = Column(Integer, primary_key=True, index=True)
-    school_id = ForeignKey('school.id')
-    team_admin_id = ForeignKey('user.id')
-    img = Column(Text(255))
-    color = Column(Text(10))
+
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    school_id: int = Field(foreign_key="school.id")
+    team_admin_id: int = Field(foreign_key="user.id")
+    img: Optional[str] = Field(default=None)
+    color: Optional[str] = Field(default=None, max_length=10)

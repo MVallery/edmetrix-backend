@@ -1,14 +1,14 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
 
-class Assign_Result(Base):
-    __tablename__ = "assign_result"
-    id = Column(Integer, primary_key=True, index=True)
-    assign_id = Column(ForeignKey('assign.id'))
-    student_id = Column(ForeignKey('student.id'))
-    score = Column(Integer)
-    status = Column(Text(100)) # complete # incomplete # not_started # retest
-    retest_score = Column(Integer)
-    retest_status = Column(Text(100)) # complete # incomplete # not_started
+from sqlmodel import Field, SQLModel, Relationship
+from typing import Optional
 
 
+class AssignResult(SQLModel, table=True):
+    __tablename__: str = "assign_result"
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    assign_id: Optional[int] = Field(foreign_key="assign.id")
+    student_id: Optional[int] = Field(foreign_key="student.id")
+    score: Optional[int] = Field(default=None)
+    status: Optional[str] = Field(default=None, max_length=100)  # complete, incomplete, not_started, retest
+    retest_score: Optional[int] = Field(default=None)
+    retest_status: Optional[str] = Field(default=None, max_length=100)  # complete, incomplete, not_started

@@ -1,17 +1,20 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import Field, SQLModel
+from typing import Optional
 
-class Unit(Base):
+class Unit(SQLModel, table=True):
     __tablename__ = "unit"
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(Text(255))
-    description = Column(Text)
-    # created_by is in case it was made by another user to keep track
-    # team_id is in case the team generates a Unit and is sharing it so when edited it will be edited for all
-    # user_id is in case this is a user specific unit that they want outside of a team.
-    created_by = Column(ForeignKey('user.id'))
-    team_id = Column(ForeignKey('team.id'))
-    user_id = Column(ForeignKey('user.id'))
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    title: Optional[str] = Field(default=None, max_length=255)
+    description: Optional[str] = None
     
-    is_premade = Column(Boolean)
-    color = Column(Text(10))
+    # created_by is in case it was made by another user to keep track
+    created_by: Optional[int] = Field(default=None, foreign_key="user.id")
+    
+    # team_id is in case the team generates a Unit and is sharing it so when edited it will be edited for all
+    team_id: Optional[int] = Field(default=None, foreign_key="team.id")
+    
+    # user_id is in case this is a user specific unit that they want outside of a team.
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id")
+    
+    is_premade: Optional[bool] = None
+    color: Optional[str] = Field(default=None, max_length=10)

@@ -1,12 +1,11 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
 
-class Question(Base):
+class Question(SQLModel, table=True):
     __tablename__ = "question"
-    id = Column(Integer, primary_key=True, index=True)
-    number = Column(Integer)
-    text = Column(Text(255))
-    answer = Column(Text(255))
-    is_multiple_choice = Column(Boolean)
-    assignment_id = Column(ForeignKey('assignment.id'))
-    concept_id = Column(ForeignKey('concept.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    number: int
+    text: str = Field(max_length=255)
+    answer: str = Field(max_length=255)
+    is_multiple_choice: bool
+    assign_id: int = Field(foreign_key="assign.id")
+    concept_id: int = Field(foreign_key="concept.id")

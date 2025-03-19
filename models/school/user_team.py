@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class User_Team(Base):
+class UserTeam(SQLModel, table=True):
     __tablename__ = "user_team"
-    id = Column(Integer, primary_key=True, index=True)
-    team_id = ForeignKey('team.id')
-    user_id = ForeignKey('user.id')
+
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    team_id: int = Field(foreign_key="team.id")
+    user_id: int = Field(foreign_key="user.id")

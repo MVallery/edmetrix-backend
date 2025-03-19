@@ -1,10 +1,9 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
 
-class Question_Response(Base):
+class QuestionResponse(SQLModel, table=True):
     __tablename__ = "question_response"
-    id = Column(Integer, primary_key=True, index=True)
-    question_id = Column(ForeignKey('question.id'))
-    student_id = Column(ForeignKey('student.id'))
-    mistake_id = Column(ForeignKey('mistake.id'))
-    text = Column(Text(255))
+    id: int = Field(default=None, primary_key=True, index=True)
+    question_id: int = Field(foreign_key="question.id")
+    student_id: int = Field(foreign_key="student.id")
+    mistake_id: int = Field(foreign_key="mistake.id")
+    text: str = Field(max_length=255)

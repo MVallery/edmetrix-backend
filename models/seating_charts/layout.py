@@ -1,14 +1,19 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey, Enum
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
+from enum import Enum as PyEnum
 
-class Layout(Base):
+class ChartStatus(str, PyEnum):
+  active = "active"
+  inactive = "inactive"
+  archived = "archived"
+
+class Layout(SQLModel, table=True):
   __tablename__ = "layout"
-  id = Column(Integer, primary_key=True, index=True)
-  name = Column(Text(255))
-  user_id = ForeignKey('user.id')
-  created_at = Column(Text(255))
-  status = Column(Enum('active', 'inactive', 'archived', name='chart_status_enum'), default='inactive')
-  rows = Column(Integer)
-  cols = Column(Integer)
 
-
+  id: Optional[int] = Field(default=None, primary_key=True, index=True)
+  name: str
+  user_id: int = Field(foreign_key="user.id")
+  created_at: Optional[str] = Field(default=None)
+  status: ChartStatus = Field(default=ChartStatus.inactive)
+  rows: int
+  cols: int

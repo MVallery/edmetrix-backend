@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
 
-class Unit_Concept(Base):
+class UnitConcept(SQLModel, table=True):
     __tablename__ = "unit_concept"
-    id = Column(Integer, primary_key=True, index=True)
-    unit_id = Column(ForeignKey('unit.id'))
-    concept_id = Column(ForeignKey('concept.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    unit_id: int = Field(foreign_key="unit.id")
+    concept_id: int = Field(foreign_key="concept.id")

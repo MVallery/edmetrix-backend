@@ -1,9 +1,8 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
 
-class Student_Metric(Base):
+class StudentMetric(SQLModel, table=True):
     __tablename__ = "student_metric"
-    id = Column(Integer, primary_key=True, index=True)
-    student_id = Column(ForeignKey('student.id'))
-    metric_id = Column(ForeignKey('metric.id'))
-    mistake_id = Column(ForeignKey('mistake.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    student_id: int = Field(foreign_key="student.id")
+    metric_id: int = Field(foreign_key="metric.id")
+    mistake_id: int = Field(foreign_key="mistake.id")

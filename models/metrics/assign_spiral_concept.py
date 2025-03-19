@@ -1,9 +1,7 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field, Relationship
+from typing import Optional, List
 
-class Spiral_Concept(Base):
-    __tablename__ = "spiral_concept"
-    id = Column(Integer, primary_key=True, index=True)
-    concept_id = Column(ForeignKey('concept.id'))
-    assign_id = Column(ForeignKey('assign.id'))
-
+class SpiralConcept(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    concept_id: Optional[int] = Field(foreign_key="concept.id")
+    assign_id: Optional[int] = Field(foreign_key="assign.id")

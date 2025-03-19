@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
 
-class Concept_Standard(Base):
+class ConceptStandard(SQLModel, table=True):
     __tablename__ = "concept_standard"
-    id = Column(Integer, primary_key=True, index=True)
-    concept_id = Column(ForeignKey('concept.id'))
-    standard_id = Column(ForeignKey('standard.id'))
+    id: int = Field(default=None, primary_key=True, index=True)
+    concept_id: int = Field(foreign_key="concept.id")
+    standard_id: int = Field(foreign_key="standard.id")

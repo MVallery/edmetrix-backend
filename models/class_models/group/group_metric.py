@@ -1,13 +1,13 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
-from ...base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Group_Metric(Base):
+class GroupMetric(SQLModel, table=True):
     __tablename__ = "group_metric"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text(255))
-    description = Column(Text(255))
-    group_id = Column(ForeignKey('group.id'))
-    unit_id = Column(ForeignKey('unit.id'))
-    concept_id = Column(ForeignKey('concept.id'))
-    notes = Column(Text(255))
-    date = Column(Text(255))
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    name: Optional[str] = Field(default=None, max_length=255)
+    description: Optional[str] = Field(default=None, max_length=255)
+    group_id: Optional[int] = Field(default=None, foreign_key="group.id")
+    unit_id: Optional[int] = Field(default=None, foreign_key="unit.id")
+    concept_id: Optional[int] = Field(default=None, foreign_key="concept.id")
+    notes: Optional[str] = Field(default=None, max_length=255)
+    date: Optional[str] = Field(default=None, max_length=255)

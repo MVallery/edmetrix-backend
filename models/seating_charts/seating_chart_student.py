@@ -1,10 +1,10 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey
-from ..base import Base
+from sqlmodel import SQLModel, Field
+from typing import Optional
 
-class Layout(Base):
-  __tablename__ = "layout"
-  id = Column(Integer, primary_key=True, index=True)
-  name = Column(Text(255))
-  user_id = ForeignKey('user.id')
-  created_at = Column(Text(255))
+class SeatingChartStudent(SQLModel, table=True):
+    __tablename__ = "seating_chart_student"
 
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
+    name: str
+    user_id: int = Field(foreign_key="user.id")
+    created_at: Optional[str] = Field(default=None)
