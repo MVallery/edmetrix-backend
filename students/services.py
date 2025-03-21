@@ -8,4 +8,5 @@ def create_student(data, db: Session):
   db.flush()
   return new_student
 
-  # db.add_
+
+# db.add_

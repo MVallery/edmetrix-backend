@@ -1,7 +1,11 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from classes.models import ClassModel, StudentClass
 from students.models import Student
 from students.services import create_student
+
+
+
+
 
 def create_class(data, db: Session) -> dict:
   print('creating class.....', data)
@@ -20,7 +24,15 @@ def get_user_classes(user_id: int, db: Session):
 
 def get_class_students(class_id: any, db: Session):
   print('getting class students.....', class_id)
-  return db.query(StudentClass).filter(StudentClass.class_id == class_id).all()
+  # results = (
+  #   db.query(StudentClass, Student)
+  #   .join(Student, StudentClass.student_id == Student.id)
+  #   .filter(StudentClass.class_id == class_id)
+  #   .all()
+  # )
+  return db.query(StudentClass).options(joinedload(StudentClass.student)).filter(StudentClass.class_id == class_id).all()
+
+# db.query(StudentClass).filter(StudentClass.class_id == class_id).all()
 
 def create_class_students(class_id: any, data, db: Session):
   print('creating class students.....', data)
@@ -38,7 +50,7 @@ def create_class_students(class_id: any, data, db: Session):
     # Create the student / class JOIN table
     # student['class_id'] = class_id
     db.add(StudentClass(**class_student))
-    db.commit()
-    return True
+  db.commit()
+  return True
 
   # db.add_all([StudentClass(**student) for student in data])
