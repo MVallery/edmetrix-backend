@@ -2,7 +2,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, create_engine, Session
-from models.class_models.class_model import Class_Model
+# import model folders
+from user.models import *
+from auth.models import *
+from school.models import *
+from classes.models import *
+from classes.layout.models import *
+from classes.seating_chart.models import *
+from classes.group.models import *
+
+from students.models import *
+from metrix.models import *
+from _models.base import Base
+
+from classes.routes import router as classes_router
+# from students.routes import router as students_router
 from fastapi import Request
 
 DATABASE_URL = "mysql://root:rootpwd@localhost/edmetrix_db"
@@ -16,38 +30,38 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+app.include_router(classes_router)
 @app.on_event("startup")
 def on_startup():
-    SQLModel.metadata.create_all(engine)
+    Base.metadata.create_all(bind=engine)
 
-@app.post("/classes/")
-def create_class(data: Class_Model):
-    print('creating class.....')
-    with Session(engine) as session:
-        new_class = Class_Model(**data.model_dump())
-        session.add(new_class)
-        session.commit()
-        session.refresh(new_class)
-        return new_class
+# @app.post("/classes/")
+# def create_class(data: ClassModel):
+#     print('creating class.....')
+#     with Session(engine) as session:
+#         new_class = ClassModel(**data.model_dump())
+#         session.add(new_class)
+#         session.commit()
+#         session.refresh(new_class)
+#         return new_class
 
 
 
-@app.post("/test/")
-def just_test(data: Class_Model):
-    print('creating class.....')
-    with Session(engine) as session:
-        new_class = Class_Model(**data.model_dump())
-        session.add(new_class)
-        session.commit()
-        session.refresh(new_class)
-        return new_class
-@app.post("/ping")
-async def ping(req: Request):
-    data = await req.json()
+# @app.post("/test/")
+# def just_test(data: ClassModel):
+#     print('creating class.....')
+#     with Session(engine) as session:
+#         new_class = ClassModel(**data.model_dump())
+#         session.add(new_class)
+#         session.commit()
+#         session.refresh(new_class)
+#         return new_class
+# @app.post("/ping")
+# async def ping(req: Request):
+#     data = await req.json()
 
-    print("Ping received:", data)
-    return {"message": "pong"}
+#     print("Ping received:", data)
+#     return {"message": "pong"}
 
 # from fastapi import FastAPI
 # from fastapi.middleware.cors import CORSMiddleware
