@@ -12,8 +12,7 @@ from user.models import *
 from auth.models import *
 from school.models import *
 from classes.models import *
-from classes.layout.models import *
-from classes.seating_chart.models import *
+from classes.seating_charts.models import *
 from classes.group.models import *
 
 from students.models import *

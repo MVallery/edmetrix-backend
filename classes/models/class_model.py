@@ -12,5 +12,5 @@ class ClassModel(Base):
     grade_min = Column(Integer)
     grade_max = Column(Integer)
     # teacher_id = Column(Integer, ForeignKey('users.id'))
-    user_id = Column(Integer, ForeignKey('users.id'))
+    teacher_id = Column(Integer, ForeignKey('teacher.id'))
     school_year = Column(Text(9))

@@ -5,7 +5,7 @@ class Metric(Base):
     __tablename__ = "metric"
     id = Column(Integer, primary_key=True, index=True)
     type = Column(Text(255)) # warm up, spiral, exit ticket, whiteboard,
-    teacher_id = Column(Integer, ForeignKey('users.id'))
+    teacher_id = Column(Integer, ForeignKey('teacher.id'))
     team_id = Column(Integer, ForeignKey('team.id'))
     unit_id = Column(Integer, ForeignKey('unit.id'))
     concept_id = Column(Integer, ForeignKey('concept.id'))

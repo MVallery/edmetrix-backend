@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
 from _models.base import Base
 
-class Users(Base):
-    __tablename__ = "users"
+class User(Base):
+    __tablename__ = "user"
     id = Column(Integer, primary_key=True, index=True)
     type = Column(Text(255)) # Teacher, Parent, Admin, Support
     name = Column(Text(255))

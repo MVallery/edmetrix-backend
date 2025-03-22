@@ -7,7 +7,7 @@ class Assign(Base):
     title = Column(Text(100))
     description = Column(Text(100))
     team_id = Column(Integer, ForeignKey('team.id'))
-    teacher_id = Column(Integer, ForeignKey('users.id'))
+    teacher_id = Column(Integer, ForeignKey('teacher.id'))
     unit_id = Column(Integer, ForeignKey('unit.id'))
     date = Column(Text(100))
     date_created = Column(Text(100))

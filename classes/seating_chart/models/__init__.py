@@ -1,2 +1,0 @@
-from .seating_chart import SeatingChart
-from .seating_chart_student import SeatingChartStudent
