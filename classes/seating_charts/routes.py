@@ -9,13 +9,13 @@ router = APIRouter()
 def create_layout_router(data: dict= Body(...), db: Session = Depends(get_session)):
     return services.create_layout(data, db)
 
-@router.get("/layout/{user_id}")
-def get_all_user_layout_router(user_id: int, db: Session = Depends(get_session)):
-    return services.get_all_user_layout(user_id, db)
+@router.get("/layout/{teacher_id}")
+def get_all_user_layout_router(teacher_id: int, db: Session = Depends(get_session)):
+    return services.get_all_user_layout(teacher_id, db)
 
 # @router.get("/layout/active")
-# def get_active_layout_router(user_id: int, db: Session = Depends(get_session)):
-#     return services.get_active_layout(user_id, db)
+# def get_active_layout_router(teacher_id: int, db: Session = Depends(get_session)):
+#     return services.get_active_layout(teacher_id, db)
 
 @router.get("/layout/{layout_id}")
 def get_layout_router(layout_id: int, db: Session = Depends(get_session)):

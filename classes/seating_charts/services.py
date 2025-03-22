@@ -22,8 +22,8 @@ def get_layout(layout_id: int, db: Session):
   return db.query(Layout).options(joinedload(LayoutDesk.desks)).get(layout_id)
 
 # FUTURE: Add in archiveability and ability to get archived layouts
-def get_all_user_layout(user_id: int, db: Session):
-  return db.query(Layout).options(joinedload(LayoutDesk.desks)).filter(Layout.teacher_id == user_id,  Layout.status != 'archived').order_by(Layout.status.desc()).all()
+def get_all_user_layout(teacher_id: int, db: Session):
+  return db.query(Layout).options(joinedload(LayoutDesk.desks)).filter(Layout.teacher_id == teacher_id,  Layout.status != 'archived').order_by(Layout.status.desc()).all()
 # .order_by(
 #     case(
 #         (Layout.status == 'active', 0),

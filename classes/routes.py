@@ -9,9 +9,9 @@ router = APIRouter()
 def create_class(data: dict= Body(...), db: Session = Depends(get_session)):
     return services.create_class(data, db)
 
-@router.get("/classes/{user_id}")
-def get_user_classes_route(user_id: int, db: Session = Depends(get_session)):
-    return services.get_user_classes(user_id, db)
+@router.get("/classes/{teacher_id}")
+def get_user_classes_route(teacher_id: int, db: Session = Depends(get_session)):
+    return services.get_user_classes(teacher_id, db)
 
 @router.get("/classes/{class_id}/students")
 def get_class_students_route(class_id: int, db: Session = Depends(get_session)):
