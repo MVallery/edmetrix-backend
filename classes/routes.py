@@ -11,12 +11,4 @@ def create_class(data: dict= Body(...), db: Session = Depends(get_session)):
 
 @router.get("/classes/{teacher_id}")
 def get_user_classes_route(teacher_id: int, db: Session = Depends(get_session)):
-    return services.get_user_classes(teacher_id, db)
-
-@router.get("/classes/{class_id}/students")
-def get_class_students_route(class_id: int, db: Session = Depends(get_session)):
-    return services.get_class_students(class_id, db)
-
-@router.post("/classes/{class_id}/students")
-def create_class_students_route(class_id: int, data: list[dict]= Body(...), db: Session = Depends(get_session)):
-    return services.create_class_students(class_id, data, db)
+    return services.get_teacher_classes(teacher_id, db)

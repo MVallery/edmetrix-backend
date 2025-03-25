@@ -16,6 +16,8 @@ from _models.base import Base
 
 from classes.routes import router as classes_router
 from classes.seating_charts.routes import router as seating_charts_router
+from students.routes import router as students_router
+
 # from students.routes import router as students_router
 from fastapi import Request
 
@@ -31,6 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(classes_router)
+app.include_router(students_router)
 app.include_router(seating_charts_router)
 
 @app.on_event("startup")

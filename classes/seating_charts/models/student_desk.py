@@ -8,6 +8,7 @@ class StudentDesk(Base):
 
   id = Column(Integer, primary_key=True, index=True)
   layout_desk_id = Column(ForeignKey("layout_desk.id"))
+  seating_chart_id = Column(ForeignKey("seating_chart.id"))
   student_id = Column(ForeignKey("student.id"))
 
   position = relationship("LayoutDesk")
