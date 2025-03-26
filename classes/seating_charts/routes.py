@@ -29,6 +29,22 @@ def create_seating_chart_router(data: dict= Body(...), db: Session = Depends(get
     return seating_chart_services.create_seating_chart(data, db)
 
 
+@router.get("/seating_chart/{seating_chart_id}")
+def get_seating_chart_router(seating_chart_id: int, db: Session = Depends(get_session)):
+    return seating_chart_services.get_seating_chart(seating_chart_id, db)
+
+# @router.get("/seating_chart/class")
+# def get_all_class_seating_charts_router(class_id: int, db: Session = Depends(get_session)):
+#     return seating_chart_services.get_all_class_seating_charts(class_id, db)
+
+@router.get("/seating_chart")
+def get_all_class_seating_charts_router(teacher_id: int, db: Session = Depends(get_session)):
+    return seating_chart_services.get_active_seating_charts(teacher_id, db)
+
+@router.put("/seating_chart/{seating_chart_id}")
+def update_seating_chart_router(seating_chart_id: int,data: dict= Body(...), db: Session = Depends(get_session)):
+    return seating_chart_services.update_seating_chart(seating_chart_id, data, db)
+
 
 # @router.get("/layout/active")
 # def get_active_layout_router(teacher_id: int, db: Session = Depends(get_session)):
