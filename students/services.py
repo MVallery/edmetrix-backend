@@ -4,7 +4,7 @@ from classes.models import StudentClass
 from students.models import Student
 
 def create_student(data, db: Session):
-  new_student = Student(**data)
+  new_student = Student(**data.dict()) # use when you set a Pydantic model like StudentCreate, you must unpack the data
   db.add(new_student)
   db.flush()
   return new_student

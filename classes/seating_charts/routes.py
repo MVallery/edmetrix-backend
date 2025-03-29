@@ -4,6 +4,8 @@ from _core.database import get_session
 from classes.seating_charts import layout_services
 from classes.seating_charts import seating_chart_services
 from classes.seating_charts.models import Layout
+from classes.seating_charts.models.layout import LayoutSchema
+
 router = APIRouter()
 
 @router.post("/layout")
@@ -13,6 +15,10 @@ def create_layout_router(data: dict= Body(...), db: Session = Depends(get_sessio
 @router.get("/layout/{layout_id}")
 def get_layout_router(layout_id: int, db: Session = Depends(get_session)):
     return layout_services.get_layout(layout_id, db)
+
+@router.get("/layout/active/{teacher_id}", response_model=LayoutSchema)
+def get_active_layout_router(teacher_id: int, db: Session = Depends(get_session)):
+    return layout_services.get_active_layout(teacher_id, db)
 
 @router.get("/layout")
 def get_all_teacher_layout_router(teacher_id: int, db: Session = Depends(get_session)):

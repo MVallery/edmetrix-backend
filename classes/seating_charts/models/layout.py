@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, Text, ForeignKey, Enum, DateTime, func
 from sqlalchemy.orm import relationship
 from _models.base import Base
+from pydantic import BaseModel
+from typing import List, Optional
+from .layout_desk import LayoutDeskSchema
 
 class Layout(Base):
   __tablename__ = "layout"
@@ -15,3 +18,16 @@ class Layout(Base):
   cols = Column(Integer)
 
   desks = relationship("LayoutDesk")
+
+
+class LayoutSchema(BaseModel):
+  id: int
+  name: str
+  teacher_id: int
+  status: str
+  rows: int
+  cols: int
+  desks: List[LayoutDeskSchema]
+
+  class Config:
+    orm_mode = True

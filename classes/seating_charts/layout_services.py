@@ -72,6 +72,9 @@ def update_layout(layout_id: int, data, db: Session):
 def get_layout(layout_id: int, db: Session):
   return db.query(Layout).options(joinedload(Layout.desks)).get(layout_id)
 
+def get_active_layout(teacher_id: int, db: Session):
+  return db.query(Layout).options(joinedload(Layout.desks)).filter(Layout.teacher_id == teacher_id, Layout.status == 'active').first()
+
 # FUTURE: Add in archiveability and ability to get archived layouts
 def get_all_teacher_layout(teacher_id: int, db: Session):
   return db.query(Layout).options(joinedload(Layout.desks)).filter(Layout.teacher_id == teacher_id,  Layout.status != 'archived').order_by(Layout.status.asc()).all()
