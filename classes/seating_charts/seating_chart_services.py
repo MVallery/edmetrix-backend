@@ -53,7 +53,7 @@ def update_seating_chart(seating_chart_id: int, data, db: Session):
   desk_changes = desks_to_change(seating_chart_id, data, db)
   print('desk-changes', desk_changes)
   # delete old desks before adding new ones
-  for layout_desk_id in desk_changes['to_delete']:
+  for layout_desk_id, _ in desk_changes['to_delete']:
     db.query(StudentDesk).filter(
         StudentDesk.seating_chart_id == seating_chart_id,
         StudentDesk.layout_desk_id == layout_desk_id,
