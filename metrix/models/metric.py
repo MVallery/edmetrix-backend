@@ -10,4 +10,3 @@ class Metric(Base):
     unit_id = Column(Integer, ForeignKey('unit.id'))
     concept_id = Column(Integer, ForeignKey('concept.id'))
     notes = Column(Text(255))
-    date = Column(Text(255))
