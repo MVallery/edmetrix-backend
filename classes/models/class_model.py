@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
+from sqlalchemy.orm import relationship
 from _models.base import Base
  
 class ClassModel(Base):
@@ -17,3 +18,5 @@ class ClassModel(Base):
     # teacher_id = Column(Integer, ForeignKey('users.id'))
     teacher_id = Column(Integer, ForeignKey('teacher.id'))
     school_year = Column(Text(9))
+
+

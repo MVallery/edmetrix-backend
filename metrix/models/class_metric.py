@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON, Date
+from sqlalchemy.orm import relationship
 from _models.base import Base
  
 class ClassMetric(Base):
@@ -7,4 +8,7 @@ class ClassMetric(Base):
     metric_id = Column(Integer, ForeignKey('metric.id'))
     class_id = Column(Integer, ForeignKey('class.id'))
     date = Column(Date)
+
+    metric = relationship("Metric", backref="classes")
+
 

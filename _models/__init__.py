@@ -1,14 +1,25 @@
 import importlib.util
 import pathlib
 
-package_dir = pathlib.Path(__file__).parent
+from user.models import *
+from auth.models import *
+from school.models import *
+from students.models import *
 
-for py_file in package_dir.rglob("*.py"):
-    if py_file.name == "__init__.py":
-        continue
-    module_path = py_file.relative_to(package_dir.parent).with_suffix("")
-    module_name = ".".join(module_path.parts)
-    importlib.import_module(module_name)
+from classes.models import *
+from metrix.models import *
+
+
+
+
+# package_dir = pathlib.Path(__file__).parent
+
+# for py_file in package_dir.rglob("*.py"):
+#     if py_file.name == "__init__.py":
+#         continue
+#     module_path = py_file.relative_to(package_dir.parent).with_suffix("")
+#     module_name = ".".join(module_path.parts)
+#     importlib.import_module(module_name)
     
     
     # import pkgutil

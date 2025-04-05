@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON, DateTime
 from _models.base import Base
 
 class ClassNote(Base):
@@ -7,6 +7,6 @@ class ClassNote(Base):
     text = Column(Text(255))
     order = Column(Integer)
     class_id = Column(Integer, ForeignKey('class.id'))
-    created = Column(Text(255))
-    updated = Column(Text(255))
+    created = Column(DateTime)
+    updated = Column(DateTime)
     type = Column(Text(255)) # academic / behavior / general

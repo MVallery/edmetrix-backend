@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Boolean
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey
 from _models.base import Base
 
 class Subject(Base):
@@ -7,4 +7,4 @@ class Subject(Base):
     name = Column(Text(255))
     color = Column(Text(10))
     is_global = Column(Boolean, default=False)
-    user_id = Column(Integer, index=True) 
+    user_id = Column(Integer, ForeignKey('user.id')) 

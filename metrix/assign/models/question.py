@@ -8,5 +8,6 @@ class Question(Base):
     text = Column(Text(255))
     answer = Column(Text(255))
     is_multiple_choice = Column(Boolean)
-    assignment_id = Column(Integer, ForeignKey('assign.id'))
+    assign_id = Column(Integer, ForeignKey('assign.id'))
     concept_id = Column(Integer, ForeignKey('concept.id'))
+    # metric_id = Column(Integer, ForeignKey('metric.id'))

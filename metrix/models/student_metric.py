@@ -7,3 +7,5 @@ class StudentMetric(Base):
     student_id = Column(Integer, ForeignKey('student.id'))
     metric_id = Column(Integer, ForeignKey('metric.id'))
     mistake_id = Column(Integer, ForeignKey('mistake.id'))
+    note = Column(Text(1000))
+    level = Column(Integer) # 1-4 for those scaled metrics, 0 - 100 for percentage metrics, each will map to the 

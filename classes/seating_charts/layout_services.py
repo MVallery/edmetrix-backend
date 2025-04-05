@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
 from classes.models import ClassModel, StudentClass
-from classes.seating_charts.models import Layout, LayoutDesk
+from classes.seating_charts.models import Layout, LayoutDesk, StudentDesk
 # def create_layout(user_id: int, data, db: Session):
 #   return db.query(ClassModel).filter(ClassModel.user_id == user_id).all()
 def save_layout_desks(layout_id: int, desks: list, db: Session):
@@ -23,8 +23,14 @@ def desks_to_change(layout_id, data, db):
   # Insert new desks
   to_create = incoming_set - existing_set
 
-  return {'to_create': to_create, 'to_delete': to_delete}
+  # Delete student desks that are no longer existing in the layout first so we can delete the layout desks.
+  to_delete_desks = [
+    d for d in existing_desks if (d.row, d.col) in to_delete
+  ]
+  layout_desk_ids = [d.id for d in to_delete_desks]
+  db.query(StudentDesk).filter(StudentDesk.layout_desk_id.in_(layout_desk_ids)).delete(synchronize_session=False)
 
+  return {'to_create': to_create, 'to_delete': to_delete}
 
 def create_layout(data, db: Session) -> dict:
   print('creating layout.....', data)
