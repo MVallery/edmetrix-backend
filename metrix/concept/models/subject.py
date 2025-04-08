@@ -7,4 +7,6 @@ class Subject(Base):
     name = Column(Text(255))
     color = Column(Text(10))
     is_global = Column(Boolean, default=False)
-    user_id = Column(Integer, ForeignKey('user.id')) 
+    teacher_id = Column(Integer, ForeignKey('teacher.id')) 
+    grade_min = Column(Integer, default=0)
+    grade_max = Column(Integer, default=12)

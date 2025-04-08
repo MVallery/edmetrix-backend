@@ -9,7 +9,7 @@ class ClassSubject(Base):
     subject_id = Column(Integer, ForeignKey('subject.id'))
     color = Column(Text(10))
 
-    subject = relationship("Subject", backref="class_subjects") 
+    subject = relationship("Subject") 
 
     class_ = relationship("ClassModel", backref="subjects") 
 

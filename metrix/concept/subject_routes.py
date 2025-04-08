@@ -16,3 +16,32 @@ def create_subject(data: dict= Body(...), db: Session = Depends(get_session)):
 @router.get("/subjects/{subject_id}")
 def get_subjects(data: dict= Body(...), db: Session = Depends(get_session)):
   return subject_services.get_subjects(data, db)
+
+@router.delete("/subjects/{subject_id}")
+def delete_subject(
+  subject_id: int,
+  db: Session = Depends(get_session),
+):
+  return subject_services.delete_metric(
+    subject_id=subject_id,
+    db=db,
+  )
+
+# @router.get("/subjects/class/{class_subject_id}")
+# def get_class_subjects(data: dict= Body(...), db: Session = Depends(get_session)):
+#   return subject_services.get_class_subjects(data, db)
+
+@router.delete("/subjects/{subject_id}")
+def delete_subject(
+  subject_id: int,
+  db: Session = Depends(get_session),
+):
+  return subject_services.delete_metric(
+    subject_id=subject_id,
+    db=db,
+  )
+
+@router.post("/subjects/class")
+def create_class_subjects(data: dict= Body(...), db: Session = Depends(get_session)):
+  return subject_services.create_class_subjects(data, db)
+

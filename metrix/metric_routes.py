@@ -1,21 +1,21 @@
 from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
 from _core.database import get_session
-from metrix import services
+from metrix import metric_services
 from metrix.models import Metric
 router = APIRouter()
 
 @router.post("/metrics/")
 def create_metric(data: dict= Body(...), db: Session = Depends(get_session)):
-  return services.create_metric(data, db)
+  return metric_services.create_metric(data, db)
 
 @router.put("/metrics/{metric_id}")
 def update_metric(metric_id: int, data: dict = Body(...), db: Session = Depends(get_session)):
-  return services.update_metric(metric_id, data, db)
+  return metric_services.update_metric(metric_id, data, db)
 
 @router.get("/metrics/{metric_id}")
 def get_metric(metric_id: int, db: Session = Depends(get_session)):
-  return services.get_metric(metric_id, db)
+  return metric_services.get_metric(metric_id, db)
 
 
 @router.get("/metrics")
@@ -27,7 +27,7 @@ def get_metrics(
   end_date: str | None = None,
   db: Session = Depends(get_session),
 ):
-  return services.get_metrics(
+  return metric_services.get_class_metrics(
     teacher_id=teacher_id,
     class_id=class_id,
     concept_id=concept_id,
@@ -38,16 +38,16 @@ def get_metrics(
 
 @router.get("/metrics/students/{student_metric_id}")
 def get_student_metric(student_metric_id: int, db: Session = Depends(get_session)):
-  return services.get_student_metric(student_metric_id, db)
+  return metric_services.get_student_metric(student_metric_id, db)
 
 
 @router.post("/metrics/students/{student_metric_id}")
 def create_student_metric(student_metric_id: int, data: dict = Body(...), db: Session = Depends(get_session)):
-  return services.create_student_metric(student_metric_id, data, db)
+  return metric_services.create_student_metric(student_metric_id, data, db)
 
 @router.put("/metrics/students/{student_metric_id}")
 def update_student_metric(student_metric_id: int, data: dict = Body(...), db: Session = Depends(get_session)):
-  return services.update_student_metric(student_metric_id, data, db)
+  return metric_services.update_student_metric(student_metric_id, data, db)
 
 @router.get("/metrics/students")
 def get_student_metrics(
@@ -58,7 +58,7 @@ def get_student_metrics(
   date: str | None = None, # pull all student metrics for a date, viewing student results/dashboard
   db: Session = Depends(get_session),
 ):
-  return services.get_student_metrics(
+  return metric_services.get_student_metrics(
     student_id=student_id,
     class_id=class_id,
     metric_id=metric_id,
@@ -73,7 +73,7 @@ def delete_metric(
   class_metric_id: int,
   db: Session = Depends(get_session),
 ):
-  return services.delete_metric(
+  return metric_services.delete_metric(
     metric_id=metric_id,
     class_metric_id=class_metric_id,
     db=db,
