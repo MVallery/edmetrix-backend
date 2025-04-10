@@ -24,8 +24,8 @@ def get_concepts(
   parent_concept_id: int | None = None,
   is_main_concept: bool | None = None,
   is_global: bool | None = None,
-  user_id: int | None = None,
-  grade_level: str | None = None,
+  teacher_id: int | None = None,
+  grade: str | None = None,
 
   db: Session = Depends(get_session),
 ):
@@ -34,8 +34,8 @@ def get_concepts(
     parent_concept_id=parent_concept_id,
     is_main_concept=is_main_concept,
     is_global=is_global,
-    user_id=user_id,
-    grade_level=grade_level,
+    teacher_id=teacher_id,
+    grade=grade,
     db=db,
   )
 

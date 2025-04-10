@@ -24,6 +24,9 @@ app.add_middleware(
 app.include_router(classes_router)
 app.include_router(students_router)
 app.include_router(seating_charts_router)
+app.include_router(metrix_router)
+app.include_router(concept_router)
+app.include_router(subject_router)
 
 @app.on_event("startup")
 def on_startup():

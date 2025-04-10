@@ -5,7 +5,7 @@ from metrix.concept import subject_services
 from metrix.concept.models import Concept
 router = APIRouter()
 
-@router.post("/subjects/")
+@router.post("/subjects")
 def create_subject(data: dict= Body(...), db: Session = Depends(get_session)):
   return subject_services.create_subject(data, db)
 
@@ -13,9 +13,22 @@ def create_subject(data: dict= Body(...), db: Session = Depends(get_session)):
 # def update_subject(subject_id: int, data: dict = Body(...), db: Session = Depends(get_session)):
 #   return subject_services.update_subject(subject_id, data, db)
 
-@router.get("/subjects/{subject_id}")
-def get_subjects(data: dict= Body(...), db: Session = Depends(get_session)):
-  return subject_services.get_subjects(data, db)
+# @router.get("/subjects/{subject_id}")
+# def get_subjects(data: dict= Body(...), db: Session = Depends(get_session)):
+#   return subject_services.get_subjects(data, db)
+@router.get("/subjects")
+def get_subjects(
+  teacher_id: int | None = None,
+  grade_level: str | None = None,
+
+  db: Session = Depends(get_session),
+):
+  return subject_services.get_subjects(
+    teacher_id=teacher_id,
+    grade_level=grade_level,
+    db=db,
+  )
+
 
 @router.delete("/subjects/{subject_id}")
 def delete_subject(

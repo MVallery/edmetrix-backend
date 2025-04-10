@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import or_, and_
 from fastapi import Depends, Body
 from classes.models import ClassModel, StudentClass
 from _core.database import get_session
@@ -22,18 +23,30 @@ def get_subject(layout_id: int, db: Session):
 
 def get_subjects(
   teacher_id: int | None = None,
-  grade: int | None = None,
+  grade_level: int | None = None,
   db: Session = Depends(get_session),
 ) -> list:
   query = db.query(Subject)
-  query = query.filter(Subject.is_global == True)
-  if teacher_id:
-    query = query.filter(Subject.teacher_id == teacher_id)
-  
-  if grade:
-    query = query.filter(Subject.grade_min <= grade)
 
-  return query.all()
+  #  for teacher specific subjects they might have created, these we will not filter by grade level
+  # for global subjects, we will filter by grade level
+  # query = query.filter( 
+  #   # or_
+  #                     #  (
+  #   Subject.teacher_id == teacher_id,
+  #   # and_(
+  #   #   # Subject.is_global == True,
+  #   #   Subject.grade_min <= grade_level,
+  #   #   Subject.grade_max >= grade_level
+  #   # )
+  # # )
+  # )
+  results = query.all()
+  print(f"Found {len(results)} subjects")
+  for r in results:
+      print(r.id, r.name, r.teacher_id, r.is_global, r.grade_min, r.grade_max)
+  return results
+  # return query.all()
 
 def delete_subject(
   subject_id: int,
