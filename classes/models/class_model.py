@@ -12,11 +12,18 @@ class ClassModel(Base):
     # category = Column(Text(255))
     color = Column(Text(10))
     archived = Column(Boolean)
-    grade = Column(JSON)
-    grade_min = Column(Integer)
-    grade_max = Column(Integer)
+    grade_level = Column(Text(2))
+    # grade_min = Column(Integer)
+    # grade_max = Column(Integer)
     # teacher_id = Column(Integer, ForeignKey('users.id'))
     teacher_id = Column(Integer, ForeignKey('teacher.id'))
     school_year = Column(Text(9))
+
+    subjects = relationship(
+        "SharedSubject",
+        primaryjoin="and_(ClassModel.grade_level==SharedSubject.grade_level, "
+                    "ClassModel.teacher_id==foreign(SharedSubject.teacher_id))",
+        viewonly=True,
+    )
 
 

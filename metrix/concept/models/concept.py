@@ -12,3 +12,5 @@ class Concept(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     is_global = Column(Boolean, default=False)
     grade_level = Column(Text(255)) # main concept like Multiplication may have a range of grade levelssh, but front-end should allow showing prev / next grade levels to account for differences.
+    grade_min = Column(Integer, default=0)
+    grade_max = Column(Integer, default=13)

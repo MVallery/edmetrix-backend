@@ -16,9 +16,9 @@ def create_subject(data, db: Session) -> dict:
 def get_subject(subject_id: int, db: Session):
   return db.query(Subject).get(subject_id)
 
-# CLASS METRICS
-def get_subject(layout_id: int, db: Session):
-  return db.query(Subject)
+# # CLASS METRICS
+# def get_subject(layout_id: int, db: Session):
+#   return db.query(Subject)
 
 
 def get_subjects(
