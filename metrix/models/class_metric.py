@@ -9,6 +9,6 @@ class ClassMetric(Base):
     class_id = Column(Integer, ForeignKey('class.id'))
     date = Column(Date)
 
-    metric = relationship("Metric", backref="classes")
+    metric = relationship("Metric", backref="class_metrics")
 
 

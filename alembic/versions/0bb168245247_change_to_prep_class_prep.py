@@ -1,8 +1,8 @@
-"""Add prep table & change grade to grade_level
+"""Change to Prep/Class Prep
 
-Revision ID: beaa0df84401
-Revises: 1c797f482c27
-Create Date: 2025-04-10 19:18:01.815358
+Revision ID: 0bb168245247
+Revises: 1b4dbda0892f
+Create Date: 2025-05-01 19:26:14.279791
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision: str = 'beaa0df84401'
-down_revision: Union[str, None] = '1c797f482c27'
+revision: str = '0bb168245247'
+down_revision: Union[str, None] = '1b4dbda0892f'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -32,30 +32,32 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_prep_id'), 'prep', ['id'], unique=False)
-    op.create_table('class_concept',
+    op.create_table('prep_concept',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('class_id', sa.Integer(), nullable=True),
     sa.Column('concept_id', sa.Integer(), nullable=True),
-    sa.Column('class_subject_id', sa.Integer(), nullable=True),
+    sa.Column('prep_id', sa.Integer(), nullable=True),
     sa.Column('active', sa.Boolean(), nullable=True),
-    sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
-    sa.ForeignKeyConstraint(['class_subject_id'], ['class_subject.id'], ),
     sa.ForeignKeyConstraint(['concept_id'], ['concept.id'], ),
+    sa.ForeignKeyConstraint(['prep_id'], ['prep.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_class_concept_id'), 'class_concept', ['id'], unique=False)
-    op.add_column('class', sa.Column('grade_level', sa.Text(length=2), nullable=True))
+    op.create_index(op.f('ix_prep_concept_id'), 'prep_concept', ['id'], unique=False)
+    op.drop_index('ix_shared_concept_id', table_name='shared_concept')
+    op.drop_table('shared_concept')
+    op.drop_index('ix_shared_subject_id', table_name='shared_subject')
+    op.drop_table('shared_subject')
     op.alter_column('class', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
+               existing_nullable=True)
+    op.alter_column('class', 'grade_level',
+               existing_type=mysql.TINYTEXT(),
+               type_=sa.Text(length=2),
                existing_nullable=True)
     op.alter_column('class', 'school_year',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=9),
                existing_nullable=True)
-    op.drop_column('class', 'grade_max')
-    op.drop_column('class', 'grade')
-    op.drop_column('class', 'grade_min')
     op.alter_column('class_subject', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
@@ -68,12 +70,22 @@ def upgrade() -> None:
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=2),
                existing_nullable=True)
+    op.add_column('metric', sa.Column('prep_concept_id', sa.Integer(), nullable=True))
+    op.alter_column('metric', 'level_scale',
+               existing_type=mysql.TEXT(),
+               type_=sa.Integer(),
+               existing_nullable=True)
+    op.drop_constraint('metric_ibfk_1', 'metric', type_='foreignkey')
+    op.create_foreign_key(None, 'metric', 'prep_concept', ['prep_concept_id'], ['id'])
+    op.drop_column('metric', 'concept_id')
     op.alter_column('school', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
                existing_nullable=True)
-    op.add_column('standard', sa.Column('grade_level', sa.Text(length=50), nullable=True))
-    op.drop_column('standard', 'grade')
+    op.alter_column('standard', 'grade_level',
+               existing_type=mysql.TINYTEXT(),
+               type_=sa.Text(length=50),
+               existing_nullable=True)
     op.alter_column('student_class', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
@@ -112,12 +124,22 @@ def downgrade() -> None:
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.add_column('standard', sa.Column('grade', mysql.TINYTEXT(), nullable=True))
-    op.drop_column('standard', 'grade_level')
+    op.alter_column('standard', 'grade_level',
+               existing_type=sa.Text(length=50),
+               type_=mysql.TINYTEXT(),
+               existing_nullable=True)
     op.alter_column('school', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
+    op.add_column('metric', sa.Column('concept_id', mysql.INTEGER(), autoincrement=False, nullable=True))
+    op.drop_constraint(None, 'metric', type_='foreignkey')
+    op.create_foreign_key('metric_ibfk_1', 'metric', 'concept', ['concept_id'], ['id'])
+    op.alter_column('metric', 'level_scale',
+               existing_type=sa.Integer(),
+               type_=mysql.TEXT(),
+               existing_nullable=True)
+    op.drop_column('metric', 'prep_concept_id')
     op.alter_column('group_meeting', 'minutes',
                existing_type=sa.Text(length=2),
                type_=mysql.TINYTEXT(),
@@ -130,20 +152,47 @@ def downgrade() -> None:
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.add_column('class', sa.Column('grade_min', mysql.INTEGER(), autoincrement=False, nullable=True))
-    op.add_column('class', sa.Column('grade', mysql.JSON(), nullable=True))
-    op.add_column('class', sa.Column('grade_max', mysql.INTEGER(), autoincrement=False, nullable=True))
     op.alter_column('class', 'school_year',
                existing_type=sa.Text(length=9),
+               type_=mysql.TINYTEXT(),
+               existing_nullable=True)
+    op.alter_column('class', 'grade_level',
+               existing_type=sa.Text(length=2),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
     op.alter_column('class', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.drop_column('class', 'grade_level')
-    op.drop_index(op.f('ix_class_concept_id'), table_name='class_concept')
-    op.drop_table('class_concept')
+    op.create_table('shared_subject',
+    sa.Column('id', mysql.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('color', mysql.TINYTEXT(), nullable=True),
+    sa.Column('subject_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('grade_level', mysql.TEXT(), nullable=True),
+    sa.Column('teacher_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.ForeignKeyConstraint(['subject_id'], ['subject.id'], name='shared_subject_ibfk_1'),
+    sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], name='shared_subject_ibfk_2'),
+    sa.PrimaryKeyConstraint('id'),
+    mysql_collate='utf8mb4_0900_ai_ci',
+    mysql_default_charset='utf8mb4',
+    mysql_engine='InnoDB'
+    )
+    op.create_index('ix_shared_subject_id', 'shared_subject', ['id'], unique=False)
+    op.create_table('shared_concept',
+    sa.Column('id', mysql.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('concept_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('shared_subject_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('active', mysql.TINYINT(display_width=1), autoincrement=False, nullable=True),
+    sa.ForeignKeyConstraint(['concept_id'], ['concept.id'], name='shared_concept_ibfk_2'),
+    sa.ForeignKeyConstraint(['shared_subject_id'], ['shared_subject.id'], name='shared_concept_ibfk_3'),
+    sa.PrimaryKeyConstraint('id'),
+    mysql_collate='utf8mb4_0900_ai_ci',
+    mysql_default_charset='utf8mb4',
+    mysql_engine='InnoDB'
+    )
+    op.create_index('ix_shared_concept_id', 'shared_concept', ['id'], unique=False)
+    op.drop_index(op.f('ix_prep_concept_id'), table_name='prep_concept')
+    op.drop_table('prep_concept')
     op.drop_index(op.f('ix_prep_id'), table_name='prep')
     op.drop_table('prep')
     # ### end Alembic commands ###

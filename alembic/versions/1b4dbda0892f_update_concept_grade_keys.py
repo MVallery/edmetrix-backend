@@ -51,9 +51,9 @@ def upgrade() -> None:
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
                existing_nullable=True)
-    op.drop_constraint('shared_concept_ibfk_1', 'shared_concept', type_='foreignkey')
-    op.drop_column('shared_concept', 'class_id')
-    op.alter_column('shared_subject', 'color',
+    op.drop_constraint('prep_concept_ibfk_1', 'prep_concept', type_='foreignkey')
+    op.drop_column('prep_concept', 'class_id')
+    op.alter_column('prep', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
                existing_nullable=True)
@@ -103,12 +103,12 @@ def downgrade() -> None:
                existing_type=sa.Text(length=50),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.alter_column('shared_subject', 'color',
+    op.alter_column('prep', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.add_column('shared_concept', sa.Column('class_id', mysql.INTEGER(), autoincrement=False, nullable=True))
-    op.create_foreign_key('shared_concept_ibfk_1', 'shared_concept', 'class', ['class_id'], ['id'])
+    op.add_column('prep_concept', sa.Column('class_id', mysql.INTEGER(), autoincrement=False, nullable=True))
+    op.create_foreign_key('prep_concept_ibfk_1', 'prep_concept', 'class', ['class_id'], ['id'])
     op.alter_column('school', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),

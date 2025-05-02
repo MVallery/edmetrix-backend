@@ -2,55 +2,55 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_
 from fastapi import Depends, Body
 from _core.database import get_session
-from metrix.concept.models import SharedConcept, Concept, SharedSubject
+from metrix.concept.models import PrepConcept, Concept, Prep
 
-def create_shared_concept(data, db: Session) -> dict:
-  new_shared_concept = SharedConcept(
+def create_prep_concept(data, db: Session) -> dict:
+  new_prep_concept = PrepConcept(
   concept_id=data.get("concept_id"),
-  shared_subject_id=data.get("shared_subject_id"),
+  prep_id=data.get("prep_id"),
   )
-  db.add(new_shared_concept)
+  db.add(new_prep_concept)
   db.commit()
-  db.refresh(new_shared_concept)
+  db.refresh(new_prep_concept)
 
-def update_shared_concept(data, db: Session) -> dict:
-    print('updating shared concept.....', data, data.get("shared_subject_id"))
-    shared_concept = db.query(SharedConcept).filter(
-      SharedConcept.concept_id == data.get("concept_id"),
-      SharedConcept.shared_subject_id == data.get("shared_subject_id")
+def update_prep_concept(data, db: Session) -> dict:
+    print('updating shared concept.....', data, data.get("prep_id"))
+    prep_concept = db.query(PrepConcept).filter(
+      PrepConcept.concept_id == data.get("concept_id"),
+      PrepConcept.prep_id == data.get("prep_id")
     ).first()
 
-    if not shared_concept:
-      create_shared_concept(data, db)
+    if not prep_concept:
+      create_prep_concept(data, db)
     else:
-      shared_concept.active = data.get("active")
+      prep_concept.active = data.get("active")
       db.commit()
-      db.refresh(shared_concept)
+      db.refresh(prep_concept)
 
 
-def update_shared_concepts(data, db: Session) -> dict:
+def update_prep_concepts(data, db: Session) -> dict:
   print('updating shared concepts.....', data)
   for concept in data.concepts:
-    shared_concept_data = {
+    prep_concept_data = {
       "concept_id": concept.concept_id,
-      "shared_subject_id": concept.shared_subject_id,
+      "prep_id": concept.prep_id,
       "active": concept.active,
     }
-    update_shared_concept(shared_concept_data, db)
-    return db.query(SharedConcept).join(SharedConcept.shared_subject).options(
-      joinedload(SharedConcept.concept)
+    update_prep_concept(prep_concept_data, db)
+    return db.query(PrepConcept).join(PrepConcept.prep).options(
+      joinedload(PrepConcept.concept)
     ).filter(
-      SharedConcept.shared_subject.has(SharedSubject.teacher_id == data.teacher_id),
-      SharedConcept.active == True
+      PrepConcept.prep.has(Prep.teacher_id == data.teacher_id),
+      PrepConcept.active == True
     ).all()
 
 
-def create_shared_concepts(data, db: Session) -> dict:
+def create_prep_concepts(data, db: Session) -> dict:
   print('updating shared concepts.....', data)
   for concept in data.get("concepts"):
-    shared_concept_data = {
+    prep_concept_data = {
       "concept_id": concept.get("concept_id"),
-      "shared_subject_id": concept.get("shared_subject_id"),
+      "prep_id": concept.get("prep_id"),
       "active": concept.get("active"),
     }
 
@@ -65,16 +65,16 @@ def create_shared_concepts(data, db: Session) -> dict:
         "user_id": concept.get("user_id"),
       }
       new_concept = create_concept(concept_data, db)
-      shared_concept_data["concept_id"] = new_concept.id  # inject newly created concept id into the shared concept
+      prep_concept_data["concept_id"] = new_concept.id  # inject newly created concept id into the shared concept
 
-    update_shared_concept(shared_concept_data, db)
+    update_prep_concept(prep_concept_data, db)
 
   # return an updated list of all the shared concepts for this subject
-  return db.query(SharedConcept).options(
-      joinedload(SharedConcept.concept)
+  return db.query(PrepConcept).options(
+      joinedload(PrepConcept.concept)
     ).filter(
-    SharedConcept.shared_subject_id == data.get("concepts")[0].get("shared_subject_id"),
-    SharedConcept.active == True
+    PrepConcept.prep_id == data.get("concepts")[0].get("prep_id"),
+    PrepConcept.active == True
   ).all()
 
 def create_concept(data, db: Session):

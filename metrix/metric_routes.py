@@ -22,7 +22,7 @@ def get_metric(metric_id: int, db: Session = Depends(get_session)):
 def get_metrics(
   teacher_id: int | None = None,
   class_id: int | None = None,
-  concept_id: int | None = None,
+  prep_concept_id: int | None = None,
   start_date: str | None = None,
   end_date: str | None = None,
   db: Session = Depends(get_session),
@@ -30,7 +30,7 @@ def get_metrics(
   return metric_services.get_class_metrics(
     teacher_id=teacher_id,
     class_id=class_id,
-    concept_id=concept_id,
+    prep_concept_id=prep_concept_id,
     start_date=start_date,
     end_date=end_date,
     db=db,
@@ -53,7 +53,7 @@ def update_student_metric(student_metric_id: int, data: dict = Body(...), db: Se
 def get_student_metrics(
   student_id: int | None = None, # pull all metrics for a student (For student page)
   class_id: int | None = None, #pull all metrics for a class (For dashboard)
-  concept_id: int | None = None, # pull all metrics for a concept (For dashboard)
+  prep_concept_id: int | None = None, # pull all metrics for a concept (For dashboard)
   metric_id: int | None = None, # pull all student metrics for a metric_id, viewing student results
   date: str | None = None, # pull all student metrics for a date, viewing student results/dashboard
   db: Session = Depends(get_session),
@@ -62,7 +62,7 @@ def get_student_metrics(
     student_id=student_id,
     class_id=class_id,
     metric_id=metric_id,
-    concept_id=concept_id,
+    prep_concept_id=prep_concept_id,
     date=date,
     db=db,
   )

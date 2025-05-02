@@ -1,4 +1,4 @@
-"""Fix shared_concept foreign key
+"""Fix prep_concept foreign key
 
 Revision ID: 3371809b6832
 Revises: 403224684dce
@@ -49,9 +49,9 @@ def upgrade() -> None:
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
                existing_nullable=True)
-    op.drop_constraint('shared_concept_ibfk_3', 'shared_concept', type_='foreignkey')
-    op.create_foreign_key(None, 'shared_concept', 'shared_subject', ['shared_subject_id'], ['id'])
-    op.alter_column('shared_subject', 'color',
+    op.drop_constraint('prep_concept_ibfk_3', 'prep_concept', type_='foreignkey')
+    op.create_foreign_key(None, 'prep_concept', 'prep', ['prep_id'], ['id'])
+    op.alter_column('prep', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
                existing_nullable=True)
@@ -101,12 +101,12 @@ def downgrade() -> None:
                existing_type=sa.Text(length=50),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.alter_column('shared_subject', 'color',
+    op.alter_column('prep', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.drop_constraint(None, 'shared_concept', type_='foreignkey')
-    op.create_foreign_key('shared_concept_ibfk_3', 'shared_concept', 'shared_concept', ['shared_subject_id'], ['id'])
+    op.drop_constraint(None, 'prep_concept', type_='foreignkey')
+    op.create_foreign_key('prep_concept_ibfk_3', 'prep_concept', 'prep_concept', ['prep_id'], ['id'])
     op.alter_column('school', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),

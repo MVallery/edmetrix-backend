@@ -20,10 +20,20 @@ class ClassModel(Base):
     school_year = Column(Text(9))
 
     subjects = relationship(
-        "SharedSubject",
-        primaryjoin="and_(ClassModel.grade_level==SharedSubject.grade_level, "
-                    "ClassModel.teacher_id==foreign(SharedSubject.teacher_id))",
+        "Prep",
+        primaryjoin="and_(ClassModel.grade_level==Prep.grade_level, "
+                    "ClassModel.teacher_id==foreign(Prep.teacher_id))",
         viewonly=True,
     )
 
 
+
+# prep
+#  subject_id = Column(Integer, ForeignKey('subject.id'))
+#  grade_level = Column(Text(2))
+#  teacher_id = Column(Integer, ForeignKey('teacher.id'))
+
+
+# class_prep
+#  prep_id: int = Column(Integer, ForeignKey('prep.id'))
+#  class_id: int = Column(Integer, ForeignKey('class.id'))
