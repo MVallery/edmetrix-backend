@@ -11,7 +11,9 @@ class ClassPrep(Base):
     prep = relationship("Prep") 
 
 
-    # class_ = relationship("ClassModel", backref="subjects") 
+    class_ = relationship("ClassModel", backref="preps") 
+
+    
 
 
 

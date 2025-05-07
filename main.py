@@ -27,6 +27,8 @@ app.include_router(seating_charts_router)
 app.include_router(metrix_router)
 app.include_router(concept_router)
 app.include_router(subject_router)
+app.include_router(prep_router)
+
 
 @app.on_event("startup")
 def on_startup():

@@ -11,7 +11,7 @@ class Prep(Base):
     teacher_id = Column(Integer, ForeignKey('teacher.id'))
 
     subject = relationship("Subject") 
-    classes = relationship("ClassModel", secondary="class_prep", back_populates="preps")
+    # classes = relationship("ClassModel", secondary="class_prep", back_populates="preps")
 
 
     # class_ = relationship("ClassModel", backref="subjects") 

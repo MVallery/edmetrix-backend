@@ -14,7 +14,7 @@ def create_prep_concept(data, db: Session) -> dict:
   db.refresh(new_prep_concept)
 
 def update_prep_concept(data, db: Session) -> dict:
-    print('updating shared concept.....', data, data.get("prep_id"))
+    print('updating prep concept.....', data, data.get("prep_id"))
     prep_concept = db.query(PrepConcept).filter(
       PrepConcept.concept_id == data.get("concept_id"),
       PrepConcept.prep_id == data.get("prep_id")
@@ -29,7 +29,7 @@ def update_prep_concept(data, db: Session) -> dict:
 
 
 def update_prep_concepts(data, db: Session) -> dict:
-  print('updating shared concepts.....', data)
+  print('updating prep concepts.....', data)
   for concept in data.concepts:
     prep_concept_data = {
       "concept_id": concept.concept_id,
@@ -46,7 +46,7 @@ def update_prep_concepts(data, db: Session) -> dict:
 
 
 def create_prep_concepts(data, db: Session) -> dict:
-  print('updating shared concepts.....', data)
+  print('updating prep concepts.....', data)
   for concept in data.get("concepts"):
     prep_concept_data = {
       "concept_id": concept.get("concept_id"),
@@ -65,11 +65,11 @@ def create_prep_concepts(data, db: Session) -> dict:
         "user_id": concept.get("user_id"),
       }
       new_concept = create_concept(concept_data, db)
-      prep_concept_data["concept_id"] = new_concept.id  # inject newly created concept id into the shared concept
+      prep_concept_data["concept_id"] = new_concept.id  # inject newly created concept id into the prep concept
 
     update_prep_concept(prep_concept_data, db)
 
-  # return an updated list of all the shared concepts for this subject
+  # return an updated list of all the prep concepts for this subject
   return db.query(PrepConcept).options(
       joinedload(PrepConcept.concept)
     ).filter(

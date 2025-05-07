@@ -19,12 +19,12 @@ class ClassModel(Base):
     teacher_id = Column(Integer, ForeignKey('teacher.id'))
     school_year = Column(Text(9))
 
-    subjects = relationship(
-        "Prep",
-        primaryjoin="and_(ClassModel.grade_level==Prep.grade_level, "
-                    "ClassModel.teacher_id==foreign(Prep.teacher_id))",
-        viewonly=True,
-    )
+    # preps = relationship(
+    #     "Prep",
+    #     primaryjoin="and_(ClassModel.grade_level==Prep.grade_level, "
+    #                 "ClassModel.teacher_id==foreign(Prep.teacher_id))",
+    #     viewonly=True,
+    # )
 
 
 

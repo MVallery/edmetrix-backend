@@ -41,31 +41,31 @@ def get_concepts(
     grade_level=grade_level,
     db=db,
   )
-class SharedConceptUpdate(BaseModel):
+class PrepConceptUpdate(BaseModel):
     id: int
     concept_id: int
-    shared_subject_id: int
+    prep_id: int
     active: bool
 
-class UpdateSharedConceptsRequest(BaseModel):
-    concepts: List[SharedConceptUpdate]
+class UpdatePrepConceptsRequest(BaseModel):
+    concepts: List[PrepConceptUpdate]
     teacher_id: int
 
 
-@router.post("/concepts/shared")
-def create_shared_concepts(data: dict = Body(...), db: Session = Depends(get_session)):
-  return concept_services.create_shared_concepts(data, db)
+@router.post("/concepts/prep")
+def create_prep_concepts(data: dict = Body(...), db: Session = Depends(get_session)):
+  return concept_services.create_prep_concepts(data, db)
 
-@router.post("/concepts/shared/update")
-def update_shared_concepts(data: UpdateSharedConceptsRequest, db: Session = Depends(get_session)):
-  print('updating shared concepts.....', data)
-  return concept_services.update_shared_concepts(data, db)
+@router.post("/concepts/prep/update")
+def update_prep_concepts(data: UpdatePrepConceptsRequest, db: Session = Depends(get_session)):
+  print('updating prep concepts.....', data)
+  return concept_services.update_prep_concepts(data, db)
 
-@router.put("/concepts/shared/{concept_id}")
+@router.put("/concepts/prep/{concept_id}")
 def update_concept(concept_id: int, data: dict = Body(...), db: Session = Depends(get_session)):
   return concept_services.update_concept(concept_id, data, db)
 
-# @router.get("/concepts/shared/{concept_id}")
+# @router.get("/concepts/prep/{concept_id}")
 # def get_concept(concept_id: int, db: Session = Depends(get_session)):
 #   return concept_services.get_concept(concept_id, db)
 
