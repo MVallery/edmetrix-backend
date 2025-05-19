@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session, joinedload
 from fastapi import Depends, Body
 from classes.models import ClassModel, StudentClass
 from _core.database import get_session
-from metrix.models import Metric, ClassMetric, StudentMetric
+from metrix.models import Metric, ClassMetric, StudentMetric, Prep, ClassPrep
 from fastapi import HTTPException
 
 def create_class_metric(data, db: Session) -> dict:
@@ -13,17 +13,26 @@ def create_class_metric(data, db: Session) -> dict:
   return new_metric
 
 def create_metric(data, db: Session) -> dict:
-  new_metric = Metric(**data)
+  new_metric = Metric(**data.get('metric'))
   db.add(new_metric)
   db.commit()
   db.refresh(new_metric)
 
-  # Save the individual class metrics
-  for key, value in data['classes'].items():
-    class_metric = ClassMetric(class_id = value.class_id, metric_id = new_metric.id)
+  # Save the individual class metrics for all similar preps (Same subject / grade_level)
+  #### NEED TO ADD A JOIN HERE BC prep ID IS NOT IN TABLE, or change to
+  #### grab prep_id and then on
+  shared_preps = db.query(ClassPrep).filter(
+    ClassPrep.prep_id == data['prep_id'],
+    # ClassModel.grade_level == data['grade_level'],
+  ).all()## save the class_id 
+  print ('shared_preps', shared_preps)
+  for key, value in shared_preps.items():
+    print('key:value', key, value)
+    class_metric = ClassMetric(class_id = value.class_id, metric_id = new_metric.id, date = data['date'])
     db.add(class_metric)
     db.commit()
 
+  # pass in prep, then can use the grade_level, subject_id and teacher_id to find matching classes
   return new_metric
 
 # def update_metric(subject_id: int, data: dict = Body(...), db: Session = Depends(get_session)):

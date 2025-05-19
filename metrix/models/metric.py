@@ -18,4 +18,6 @@ class Metric(Base):
     # If scale is 2 -> options for student level: 4 = adv, 1 = beg
     level_scale = Column(Integer) 
 
+    prep = relationship("PrepConcept", backref="metrics")
+
 
