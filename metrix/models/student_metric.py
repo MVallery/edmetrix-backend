@@ -10,7 +10,7 @@ class StudentMetric(Base):
     mistake_id = Column(Integer, ForeignKey('mistake.id'))
     class_id = Column(Integer, ForeignKey('class.id'))
     student_class_id = Column(Integer, ForeignKey('student_class.id')) #may only need this in future, but want to include others in case it helps
-    note = Column(Text(1000))
+    notes = Column(Text(1000))
     level = Column(Integer) # 1-4 for those scaled metrics, 0 - 100 for percentage metrics, each will map to the 
 
     student_class= relationship("StudentClass", backref="student_metrics")
