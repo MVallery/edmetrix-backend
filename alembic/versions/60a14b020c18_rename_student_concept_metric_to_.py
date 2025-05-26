@@ -1,8 +1,8 @@
-"""Add mastery_metric & history
+"""Rename student_concept_metric to mastery_metric
 
-Revision ID: 1c7c1f9431c5
-Revises: 6ba184228d12
-Create Date: 2025-05-21 21:01:58.827669
+Revision ID: 60a14b020c18
+Revises: 1c7c1f9431c5
+Create Date: 2025-05-25 21:30:46.244698
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision: str = '1c7c1f9431c5'
-down_revision: Union[str, None] = '6ba184228d12'
+revision: str = '60a14b020c18'
+down_revision: Union[str, None] = '1c7c1f9431c5'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -32,7 +32,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
     sa.ForeignKeyConstraint(['concept_id'], ['prep_concept.id'], ),
     sa.ForeignKeyConstraint(['student_id'], ['student.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('student_id', 'concept_id', name='uix_master_metric')
     )
     op.create_index(op.f('ix_mastery_metric_id'), 'mastery_metric', ['id'], unique=False)
     op.create_table('mastery_metric_history',
@@ -41,13 +42,17 @@ def upgrade() -> None:
     sa.Column('notes', sa.Text(length=1000), nullable=True),
     sa.Column('old_level', sa.Integer(), nullable=True),
     sa.Column('new_level', sa.Integer(), nullable=True),
-    sa.Column('teacher_id', sa.Integer(), nullable=True),
+    sa.Column('class_id', sa.Integer(), nullable=True),
     sa.Column('date', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
     sa.ForeignKeyConstraint(['mastery_metric_id'], ['mastery_metric.id'], ),
-    sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_mastery_metric_history_id'), 'mastery_metric_history', ['id'], unique=False)
+    op.drop_index('ix_student_concept_metric_history_id', table_name='student_concept_metric_history')
+    op.drop_table('student_concept_metric_history')
+    op.drop_index('ix_student_concept_metric_id', table_name='student_concept_metric')
+    op.drop_table('student_concept_metric')
     op.alter_column('class', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
@@ -88,12 +93,6 @@ def upgrade() -> None:
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
                existing_nullable=True)
-    op.add_column('student_metric', sa.Column('class_metric_id', sa.Integer(), nullable=True))
-    op.add_column('student_metric', sa.Column('notes', sa.Text(length=1000), nullable=True))
-    op.drop_constraint('student_metric_ibfk_1', 'student_metric', type_='foreignkey')
-    op.create_foreign_key(None, 'student_metric', 'class_metric', ['class_metric_id'], ['id'])
-    op.drop_column('student_metric', 'note')
-    op.drop_column('student_metric', 'metric_id')
     op.alter_column('student_note', 'color',
                existing_type=mysql.TINYTEXT(),
                type_=sa.Text(length=10),
@@ -124,12 +123,6 @@ def downgrade() -> None:
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
-    op.add_column('student_metric', sa.Column('metric_id', mysql.INTEGER(), autoincrement=False, nullable=True))
-    op.add_column('student_metric', sa.Column('note', mysql.TEXT(), nullable=True))
-    op.drop_constraint(None, 'student_metric', type_='foreignkey')
-    op.create_foreign_key('student_metric_ibfk_1', 'student_metric', 'metric', ['metric_id'], ['id'])
-    op.drop_column('student_metric', 'notes')
-    op.drop_column('student_metric', 'class_metric_id')
     op.alter_column('student_class', 'color',
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
@@ -170,6 +163,39 @@ def downgrade() -> None:
                existing_type=sa.Text(length=10),
                type_=mysql.TINYTEXT(),
                existing_nullable=True)
+    op.create_table('student_concept_metric',
+    sa.Column('id', mysql.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('student_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('concept_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('class_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('notes', mysql.TEXT(), nullable=True),
+    sa.Column('level', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('date', mysql.DATETIME(), nullable=True),
+    sa.ForeignKeyConstraint(['class_id'], ['class.id'], name='student_concept_metric_ibfk_1'),
+    sa.ForeignKeyConstraint(['concept_id'], ['prep_concept.id'], name='student_concept_metric_ibfk_2'),
+    sa.ForeignKeyConstraint(['student_id'], ['student.id'], name='student_concept_metric_ibfk_3'),
+    sa.PrimaryKeyConstraint('id'),
+    mysql_collate='utf8mb4_0900_ai_ci',
+    mysql_default_charset='utf8mb4',
+    mysql_engine='InnoDB'
+    )
+    op.create_index('ix_student_concept_metric_id', 'student_concept_metric', ['id'], unique=False)
+    op.create_table('student_concept_metric_history',
+    sa.Column('id', mysql.INTEGER(), autoincrement=True, nullable=False),
+    sa.Column('student_concept_metric_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('notes', mysql.TEXT(), nullable=True),
+    sa.Column('old_level', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('new_level', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('teacher_id', mysql.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('date', mysql.DATETIME(), nullable=True),
+    sa.ForeignKeyConstraint(['student_concept_metric_id'], ['student_concept_metric.id'], name='student_concept_metric_history_ibfk_1'),
+    sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], name='student_concept_metric_history_ibfk_2'),
+    sa.PrimaryKeyConstraint('id'),
+    mysql_collate='utf8mb4_0900_ai_ci',
+    mysql_default_charset='utf8mb4',
+    mysql_engine='InnoDB'
+    )
+    op.create_index('ix_student_concept_metric_history_id', 'student_concept_metric_history', ['id'], unique=False)
     op.drop_index(op.f('ix_mastery_metric_history_id'), table_name='mastery_metric_history')
     op.drop_table('mastery_metric_history')
     op.drop_index(op.f('ix_mastery_metric_id'), table_name='mastery_metric')
