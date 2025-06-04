@@ -6,8 +6,9 @@ from metrix.concept.models import PrepConcept, Concept, Prep
 
 def create_prep_concept(data, db: Session) -> dict:
   new_prep_concept = PrepConcept(
-  concept_id=data.get("concept_id"),
-  prep_id=data.get("prep_id"),
+    concept_id=data.get("concept_id"),
+    prep_id=data.get("prep_id"),
+    active=data.get("active", True)  # default to active if not provided
   )
   db.add(new_prep_concept)
   db.commit()
