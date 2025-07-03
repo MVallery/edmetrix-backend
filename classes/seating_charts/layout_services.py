@@ -9,6 +9,7 @@ def save_layout_desks(layout_id: int, desks: list, db: Session):
   db.add_all([
     LayoutDesk(**{**desk, "layout_id": layout_id}) for desk in desks
   ])
+  # db.commit()
 
 def desks_to_change(layout_id, data, db):
   existing_desks = db.query(LayoutDesk).filter(LayoutDesk.layout_id == layout_id).all()
@@ -66,17 +67,19 @@ def update_layout(layout_id: int, data, db: Session):
         LayoutDesk.row == row,
         LayoutDesk.col == col
     ).delete()
-
   # transform desks back to list[dict] for saving
   desks = [{"row": row, "col": col} for row, col in desk_changes['to_create']]
   save_layout_desks(layout_id, desks, db)
 
   db.commit()
   db.refresh(layout)
+
+  print('layout:', get_layout(layout.id, db))
   return get_layout(layout.id, db)
 
 def get_layout(layout_id: int, db: Session):
-  return db.query(Layout).options(joinedload(Layout.desks)).get(layout_id)
+  # populate_existing helps ensure desks are populated
+  return db.query(Layout).options(joinedload(Layout.desks)).populate_existing().get(layout_id)
 
 def get_active_layout(teacher_id: int, db: Session):
   return db.query(Layout).options(joinedload(Layout.desks)).filter(Layout.teacher_id == teacher_id, Layout.status == 'active').first()

@@ -16,6 +16,8 @@ def create_prep_concept(data, db: Session) -> dict:
 
 def update_prep_concept(data, db: Session) -> dict:
     print('updating prep concept.....', data, data.get("prep_id"))
+    # not filtering by prepconcept id bc we do not have that passed in, but prep_id is unique along with concept_id should be unique combo
+
     prep_concept = db.query(PrepConcept).filter(
       PrepConcept.concept_id == data.get("concept_id"),
       PrepConcept.prep_id == data.get("prep_id")
@@ -33,17 +35,18 @@ def update_prep_concepts(data, db: Session) -> dict:
   print('updating prep concepts.....', data)
   for concept in data.concepts:
     prep_concept_data = {
+      # "id": concept.id,
       "concept_id": concept.concept_id,
       "prep_id": concept.prep_id,
       "active": concept.active,
     }
     update_prep_concept(prep_concept_data, db)
-    return db.query(PrepConcept).join(PrepConcept.prep).options(
-      joinedload(PrepConcept.concept)
-    ).filter(
-      PrepConcept.prep.has(Prep.teacher_id == data.teacher_id),
-      PrepConcept.active == True
-    ).all()
+  return db.query(PrepConcept).join(PrepConcept.prep).options(
+    joinedload(PrepConcept.concept)
+  ).filter(
+    PrepConcept.prep.has(Prep.teacher_id == data.teacher_id),
+    # PrepConcept.active == True
+  ).all()
 
 
 def create_prep_concepts(data, db: Session) -> dict:
@@ -56,7 +59,7 @@ def create_prep_concepts(data, db: Session) -> dict:
     }
 
     # if this is a newly created concept, then create a new base concept & set that concept_id
-    if concept.get("concept_id") is None:
+    if concept.get("concept_id") is None or concept.get("concept_id") == 0:
       concept_data = {
         "name": concept.get("name"),
         "is_global": False,
@@ -75,11 +78,11 @@ def create_prep_concepts(data, db: Session) -> dict:
       joinedload(PrepConcept.concept)
     ).filter(
     PrepConcept.prep_id == data.get("concepts")[0].get("prep_id"),
-    PrepConcept.active == True
+    # PrepConcept.active == True
   ).all()
 
 def create_concept(data, db: Session):
-  new_concept = Concept(**data.dict()) # use when you set a Pydantic model like StudentCreate, you must unpack the data
+  new_concept = Concept(**data) 
   db.add(new_concept)
   db.flush()
   return new_concept
@@ -94,18 +97,31 @@ def get_concepts(
   db: Session = Depends(get_session),
 ) -> list:
   query = db.query(Concept)
-  print('getting concepts.....', subject_id, user_id, parent_concept_id, is_main_concept, is_global, grade_level)
+  print('getting concepts.....', subject_id, user_id, grade_level)
+  # if subject_id:
+  #   query = query.filter(Concept.subject_id == subject_id)
+  
+  # if user_id:
+  #   query = query.filter(
+  #      or_(
+  #       Concept.user_id == user_id,
+  #       Concept.is_global == True
+  #     )
+  #   )
   if subject_id:
-    query = query.filter(Concept.subject_id == subject_id)
-  
-  if user_id:
-    query = query.filter(
-       or_(
-        Concept.user_id == user_id,
-        Concept.is_global == True
+    if user_id:
+      query = query.filter(
+        or_(
+          and_(Concept.user_id == user_id, Concept.subject_id == subject_id),
+          and_(Concept.is_global == True, Concept.subject_id == subject_id)
+        )
       )
-    )
+    else:
+      query = query.filter(
+        and_(Concept.is_global == True, Concept.subject_id == subject_id)
+      )
   
+
   if parent_concept_id:
     query = query.filter(Concept.parent_concept_id == parent_concept_id)
   
@@ -114,5 +130,8 @@ def get_concepts(
   
   if grade_level:
     query = query.filter(Concept.grade_min <= grade_level, Concept.grade_max >= grade_level)
+  concepts = query.all()
+  print('concept results', [{"id": c.id, "name": c.name, "subject_id": c.subject_id} for c in concepts])
+
 
   return query.all()

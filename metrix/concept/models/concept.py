@@ -7,7 +7,7 @@ class Concept(Base):
     subject_id = Column(Integer, ForeignKey('subject.id'))
     parent_concept_id = Column(Integer, ForeignKey('concept.id'))
     is_main_concept = Column(Boolean, default=False)
-    name = Column(Text(255))
+    name = Column(Text(255), nullable=False)
     description = Column(Text(255))
     user_id = Column(Integer, ForeignKey('user.id'))
     is_global = Column(Boolean, default=False)

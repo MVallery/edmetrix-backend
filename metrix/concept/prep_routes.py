@@ -15,3 +15,6 @@ def update_prep(data: dict= Body(...), db: Session = Depends(get_session)):
 def get_class_preps(class_id: int, db: Session = Depends(get_session)):
   return prep_services.get_class_preps(class_id, db)
 
+@router.get("/prep/teacher/{teacher_id}")
+def get_teacher_preps(teacher_id: int, db: Session = Depends(get_session)):
+  return prep_services.get_teacher_preps(teacher_id, db)
