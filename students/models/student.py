@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text
+from sqlalchemy import Column, Integer, Text, Boolean
 from _models.base import Base
 
 class Student(Base):
@@ -11,3 +11,4 @@ class Student(Base):
     birthday = Column(Text(255))
     img = Column(Text(255))
     grade_level = Column(Integer)
+    active = Column(Boolean, default=True) # if student is active in this class or not 

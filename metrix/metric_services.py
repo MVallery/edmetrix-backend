@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.dialects.postgresql import insert
 
 from fastapi import Depends, Body
-from classes.models import ClassModel, StudentClass
 from _core.database import get_session
 from metrix.models import Metric, ClassMetric, StudentMetric, MasteryMetric, MasteryMetricHistory, Prep, ClassPrep
 from fastapi import HTTPException

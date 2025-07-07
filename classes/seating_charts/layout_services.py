@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
-from classes.models import ClassModel, StudentClass
+from classes.models import ClassModel
+from students.models import StudentClass
 from classes.seating_charts.models import Layout, LayoutDesk, StudentDesk
 # def create_layout(user_id: int, data, db: Session):
 #   return db.query(ClassModel).filter(ClassModel.user_id == user_id).all()

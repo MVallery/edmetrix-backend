@@ -1,7 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload
-from classes.models import ClassModel, StudentClass
+from classes.models import ClassModel
 from classes.seating_charts.models import SeatingChart, StudentDesk
+
+# this student was removed from the class, so we need to delete any desks associated with that student in any seating chart.
+def delete_student_desk(student_class_id: int, db: Session):
+  db.query(StudentDesk).filter(StudentDesk.student_class_id == student_class_id).delete()
+  db.commit()
 
 def save_student_desks(seating_chart_id: int, desks: list, db: Session):
   print('desks...', desks)
@@ -27,11 +32,11 @@ def create_seating_chart(data: dict, db: Session):
 
 def desks_to_change(seating_chart_id, data, db):
   existing_desks = db.query(StudentDesk).filter(StudentDesk.seating_chart_id == seating_chart_id).all()
-  incoming_desks = [{ "layout_desk_id": d["layout_desk_id"], "student_id": d["student_id"] } for d in data['desks']]
+  incoming_desks = [{ "layout_desk_id": d["layout_desk_id"], "student_id": d["student_id"], "student_class_id": d["student_class_id"] } for d in data['desks']]
 
   # Build a set of (row, col) for easy comparison
-  existing_set = {(d.layout_desk_id, d.student_id) for d in existing_desks}
-  incoming_set = {(d["layout_desk_id"], d["student_id"]) for d in incoming_desks}
+  existing_set = {(d.layout_desk_id, d.student_id, d.student_class_id) for d in existing_desks}
+  incoming_set = {(d["layout_desk_id"], d["student_id"], d["student_class_id"]) for d in incoming_desks}
 
   # Delete removed desks
   to_delete = existing_set - incoming_set
@@ -60,7 +65,7 @@ def update_seating_chart(seating_chart_id: int, data, db: Session):
     ).delete()
 
   # transform desks back to list[dict] for saving
-  desks = [{"layout_desk_id": layout_desk_id, "student_id": student_id} for layout_desk_id, student_id in desk_changes['to_create']]
+  desks = [{"layout_desk_id": layout_desk_id, "student_id": student_id, "student_class_id": student_class_id} for layout_desk_id, student_id, student_class_id in desk_changes['to_create']]
   save_student_desks(seating_chart_id, desks, db)
 
   db.commit()

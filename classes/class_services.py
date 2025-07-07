@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session, joinedload, with_loader_criteria
-from classes.models import ClassModel, StudentClass
-from metrix.concept.models import ClassSubject, PrepConcept, Prep, ClassPrep
+from classes.models import ClassModel
+from metrix.concept.models import PrepConcept, Prep, ClassPrep
 from metrix.concept.subject_services import create_subject
-from students.models import Student
 from students.student_services import create_student
 
 def create_subjects(subjects, new_class, db: Session):

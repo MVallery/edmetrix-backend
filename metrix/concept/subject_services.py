@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_
 from fastapi import Depends, Body
-from classes.models import ClassModel, StudentClass
 from _core.database import get_session
 from metrix.concept.models import Subject, ClassSubject
 from fastapi import HTTPException

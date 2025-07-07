@@ -11,9 +11,9 @@ def get_class_preps(class_id: int, db: Session):
         .joinedload(PrepConcept.concept),
     joinedload(ClassPrep.prep)
       .joinedload(Prep.subject),
-    with_loader_criteria(PrepConcept, 
-                        #  PrepConcept.active == True
-                         )
+    # with_loader_criteria(PrepConcept, 
+    #                     #  PrepConcept.active == True
+    #                      )
     ).filter((ClassPrep.class_id == class_id)).all()
 
 def get_teacher_preps(teacher_id: int, db: Session):

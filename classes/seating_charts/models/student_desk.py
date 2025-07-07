@@ -10,6 +10,7 @@ class StudentDesk(Base):
   layout_desk_id = Column(ForeignKey("layout_desk.id"))
   seating_chart_id = Column(ForeignKey("seating_chart.id"))
   student_id = Column(ForeignKey("student.id"))
+  student_class_id = Column(ForeignKey("student_class.id"))
 
   position = relationship("LayoutDesk")
 

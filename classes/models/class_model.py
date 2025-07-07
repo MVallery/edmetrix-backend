@@ -18,6 +18,7 @@ class ClassModel(Base):
     # teacher_id = Column(Integer, ForeignKey('users.id'))
     teacher_id = Column(Integer, ForeignKey('teacher.id'))
     school_year = Column(Text(9))
+    active = Column(Boolean, default=True) # if student is active in this class or not 
 
     # preps = relationship(
     #     "Prep",

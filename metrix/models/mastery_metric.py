@@ -9,7 +9,7 @@ from _models.base import Base
 class MasteryMetric(Base):
     __tablename__ = "mastery_metric"
     __table_args__ = (
-      UniqueConstraint('student_id', 'concept_id', name='uix_mastery_metric'),
+      UniqueConstraint('student_id', 'concept_id', name='uix_master_metric'),
     )
     id = Column(Integer, primary_key=True, index=True)
     student_id = Column(Integer, ForeignKey('student.id'))
