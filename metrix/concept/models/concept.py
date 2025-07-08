@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Boolean, Integer, Text, ForeignKey
 from _models.base import Base
+from sqlalchemy.orm import relationship
 
 class Concept(Base):
     __tablename__ = "concept"
@@ -14,3 +15,5 @@ class Concept(Base):
     grade_level = Column(Text(255)) # main concept like Multiplication may have a range of grade levelssh, but front-end should allow showing prev / next grade levels to account for differences.
     grade_min = Column(Integer, default=0)
     grade_max = Column(Integer, default=13)
+
+    subject = relationship("Subject")

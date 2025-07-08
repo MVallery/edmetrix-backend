@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import insert
 
 from fastapi import Depends, Body
 from _core.database import get_session
+from metrix.concept.models import PrepConcept, Concept
 from metrix.models import Metric, ClassMetric, StudentMetric, MasteryMetric, MasteryMetricHistory, Prep, ClassPrep
 from fastapi import HTTPException
 from collections import defaultdict
@@ -57,6 +58,32 @@ def create_mastery_metrics(data, db: Session) -> dict:
     data['student_id'] = student_id
     create_mastery_metric(data, db)
 
+def get_student_mastery_metrics(
+    student_id: int,
+    class_id: int,
+    db: Session = Depends(get_session),
+) -> list:
+  query = db.query(MasteryMetric).options(
+    joinedload(MasteryMetric.concept)
+      .joinedload(PrepConcept.concept)
+        .joinedload(Concept.subject)
+      )
+
+  
+  query = query.filter(
+    MasteryMetric.student_id == student_id,
+    MasteryMetric.class_id == class_id
+  )
+
+  return [
+    {
+        **metric.__dict__,
+        "concept_name": metric.concept.concept.name,
+        "subject_name": metric.concept.concept.subject.name,
+        "subject_id": metric.concept.concept.subject.id
+    }
+    for metric in query.all()
+]
 
 def get_mastery_metrics(
   student_id: int | None = None,
@@ -66,7 +93,7 @@ def get_mastery_metrics(
 ) -> list:
   query = db.query(MasteryMetric)
   
-  if student_id:
+  if student_id: # not used currently using get_student_mastery_metrics
     query = query.filter(MasteryMetric.student_id == student_id)
   
   if class_id:
@@ -81,8 +108,9 @@ def get_mastery_metrics(
       "level": mastery_metric.level,
       "notes": mastery_metric.notes
     }
-    result['concept_id'] = concept_id
-    print('result', dict(result))
+  result['concept_id'] = concept_id # for now this helps populate the real concept concept_id since this is prep_concept_id, 
+    # result['concept_id'] = concept_id if concept_id else mastery_metric.concept_id
+  print('result', dict(result))
   return dict(result)
   # tweak this to return object {[student_id: metric level]} **********************************************
   # return query.all()

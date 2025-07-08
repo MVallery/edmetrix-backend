@@ -34,8 +34,13 @@ def create_mastery_metrics(
 ):
   return metric_services.create_mastery_metrics(data, db)
 
-
-
+@router.get("/mastery_metrics/student")
+def get_student_mastery_metrics(
+  class_id: int | None = None,
+  student_id: int | None = None,
+  db: Session = Depends(get_session),
+):
+  return metric_services.get_student_mastery_metrics(student_id, class_id, db)
 
 
 
