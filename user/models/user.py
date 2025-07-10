@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
 from _models.base import Base
+from sqlalchemy import JSON
+from sqlalchemy.ext.mutable import MutableDict
 
 class User(Base):
     __tablename__ = "user"
@@ -14,4 +16,6 @@ class User(Base):
     # Notifications for student birthdays for teacher type = Student bdays
     bday_notification_day = Column(Text(255)) # day before, day of, both
     bday_notification_time = Column(Text(255)) # time 8:00AM
+
+    settings = Column(MutableDict.as_mutable(JSON), default=dict, nullable=True)
 

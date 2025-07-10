@@ -12,9 +12,7 @@ class Teacher(Base):
   id = Column(Integer, primary_key=True, index=True)
   type = Column(Text(255), default='Teacher') # Teacher, SPED Teacher, Intervention Specialist, Home School Teacher,
 
-  # TO DO: Look into this as it is causing astext_type=Text() to be added which throws errors;
-  # settings = Column(MutableDict.as_mutable(JSONB(none_as_null=True)))
-  # settings = Column(JSONB, default=dict, nullable=True)
+
 
   user_id = Column(Integer, ForeignKey('user.id'))
   user = relationship("User")
