@@ -1,16 +1,16 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON, String
 from _models.base import Base
 from sqlalchemy import JSON
 from sqlalchemy.ext.mutable import MutableDict
 
 class User(Base):
     __tablename__ = "user"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(36), primary_key=True, index=True)
     type = Column(Text(255)) # Teacher, Parent, Admin, Support
     name = Column(Text(255))
     img = Column(Text(255))
     email = Column(Text(255))
-    password = Column(Text(255))
+    # password = Column(Text(255))
     premium = Column(Boolean)
     school = Column(Integer, ForeignKey("school.id"))
     # Notifications for student birthdays for teacher type = Student bdays

@@ -6,4 +6,5 @@ from metrix.metric_routes import router as metrix_router
 from metrix.concept.concept_routes import router as concept_router
 from metrix.concept.subject_routes import router as subject_router
 from metrix.concept.prep_routes import router as prep_router
+from auth.auth_routes import router as auth_router
 

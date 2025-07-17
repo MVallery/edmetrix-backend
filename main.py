@@ -21,6 +21,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.include_router(auth_router)
 app.include_router(classes_router)
 app.include_router(students_router)
 app.include_router(seating_charts_router)
