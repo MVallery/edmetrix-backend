@@ -19,17 +19,18 @@ def create_user(data: dict, db: Session) -> dict:
   db.refresh(new_user)
 
   teacher = create_teacher(new_user.id, db)
-  new_user.teacher_id = teacher.id
+  new_user.teacher = teacher
   return new_user
 
-def get_user(user_id: int, db: Session) -> dict:
+def get_user(user_id: str, db: Session) -> dict:
   print('Fetching user with ID:', user_id)
-  user = db.query(User).filter(User.id == user_id).first()
+  # user = db.query(User).filter(User.id == user_id).first()
+  user = db.query(User).options(joinedload(User.teacher)).filter(User.id == user_id).first()
   if not user:
     raise ValueError(f"User with ID {user_id} not found")
   return user
 
-def update_user(user_id: int, data, db: Session) -> dict:
+def update_user(user_id: str, data, db: Session) -> dict:
   print('Updating user with ID:', user_id)
   user = db.query(User).filter(User.id == user_id).first()
   allowed_fields = ['name', 'type']

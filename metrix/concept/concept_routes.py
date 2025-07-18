@@ -23,7 +23,7 @@ def get_concept(concept_id: int, db: Session = Depends(get_session)):
 @router.get("/concepts")
 def get_concepts(
   subject_id: int | None = None,
-  user_id: int | None = None,
+  user_id: str | None = None,
   parent_concept_id: int | None = None,
   is_main_concept: bool | None = None,
   is_global: bool | None = None,

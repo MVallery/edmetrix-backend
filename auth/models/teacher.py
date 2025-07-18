@@ -16,7 +16,7 @@ class Teacher(Base):
 
 
   user_id = Column(String(36), ForeignKey('user.id'))
-  user = relationship("User")
+  user = relationship("User", back_populates="teacher")
 
 
 

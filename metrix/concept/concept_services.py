@@ -89,7 +89,7 @@ def create_concept(data, db: Session):
 
 def get_concepts(
   subject_id: int | None = None,
-  user_id: int | None = None,
+  user_id: str | None = None,
   parent_concept_id: int | None = None,
   is_main_concept: bool | None = None,
   is_global: bool | None = True,

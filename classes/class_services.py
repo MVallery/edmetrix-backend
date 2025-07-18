@@ -4,32 +4,52 @@ from metrix.concept.models import PrepConcept, Prep, ClassPrep
 from metrix.concept.subject_services import create_subject
 from students.student_services import create_student
 
-def create_subjects(subjects, new_class, db: Session):
-   for subject in subjects:
+# each grade level / subject combo will be considered one "prep", 
+# teachers can have multiple subjects so they can have multiple preps
+# for now teachers can only specify one grade level, but eventually we will allow multiple grade levels
+
+def create_preps(subjects, new_class, db: Session):
+  for subject in subjects:
+    print('Creating subject for class:', subject)
+    # first see if we already have the same prep for this subject and grade level
     prep = db.query(Prep).filter(
-      Prep.subject_id == subject.get("subject_id"),
-      Prep.grade_level == subject.get("grade_level"),
+      Prep.subject_id == subject,
+      Prep.grade_level == new_class.grade_level,
       Prep.teacher_id == new_class.teacher_id
     ).first()
 
     # if we do not already have this prep grade level / subject combo in the preps table, then create a new one.
     if not prep:
-      new_prep = Prep(
-        subject_id=subject.get("subject_id"),
+      prep = Prep(
+        subject_id=subject,
         teacher_id=new_class.teacher_id,
         grade_level=new_class.grade_level,
       )
-      db.add(new_prep)
+      db.add(prep)
       db.commit()
-      db.refresh(new_prep)
+      db.refresh(prep)
+
+    # Create a new class_prep join table for each prep
+    class_prep = ClassPrep(
+      class_id=new_class.id,
+      prep_id=prep.id,
+    )
+    db.add(class_prep)
+    db.commit()
+    db.refresh(class_prep)
+
+    
+  
+
 
 def create_class(data, db: Session) -> dict:
+  print('Creating class with data:', data)
   subjects = data.pop("subjects", [])
   new_class = ClassModel(**data)
-  create_subjects(subjects, new_class, db)
   db.add(new_class)
   db.commit()
   db.refresh(new_class)
+  create_preps(subjects, new_class, db)
 
   print(subjects, 'subjjjyyy')
  
