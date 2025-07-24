@@ -38,7 +38,20 @@ def create_preps(subjects, new_class, db: Session):
     db.commit()
     db.refresh(class_prep)
 
-    
+def update_class(class_id: int, data: dict, db: Session) -> dict:
+  print('Updating class with ID:', class_id)
+  class_model = db.query(ClassModel).get(class_id)
+  if not class_model:
+    raise ValueError(f"Class with ID {class_id} not found")
+
+  # Update class fields
+  for key, value in data.items():
+    setattr(class_model, key, value)
+
+  db.commit()
+  db.refresh(class_model)
+  
+  return class_model
   
 
 
