@@ -9,6 +9,13 @@ class StudentCreate(BaseModel):
     first_name: str
     last_name: str
     name: str
+    email: str | None = None
+    birthday: str | None = None
+    img: str | None = None
+    grade_level: int | None = None
+    school_student_id: str | None = None  # ID used by the school system, if applicable
+    school_id: int | None = None
+    gender: str | None = None  # M, F, O
 
 class StudentOut(BaseModel):
     id: int
