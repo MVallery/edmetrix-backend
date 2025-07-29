@@ -7,6 +7,6 @@ class ClassNote(Base):
     text = Column(Text(255))
     order = Column(Integer)
     class_id = Column(Integer, ForeignKey('class.id'))
-    created = Column(DateTime)
-    updated = Column(DateTime)
+    created_at = Column(DateTime)
+    updated_at = Column(DateTime)
     type = Column(Text(255)) # academic / behavior / general

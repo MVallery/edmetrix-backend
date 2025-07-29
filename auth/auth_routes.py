@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, Body
 from sqlalchemy.orm import Session
 from _core.database import get_session
 from auth import auth_services
+from auth.models.userSchema import UserSchema
 router = APIRouter()
 
-@router.post("/auth/user")
+@router.post("/auth/user", response_model=UserSchema)
 def create_class(data: dict= Body(...), db: Session = Depends(get_session)):
     return auth_services.create_user(data, db)
 

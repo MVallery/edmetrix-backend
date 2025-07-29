@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON
+from sqlalchemy import Column, Integer, Text, Boolean, ForeignKey, JSON, DateTime, func
 from sqlalchemy.orm import relationship
 from _models.base import Base
  
@@ -19,6 +19,8 @@ class ClassModel(Base):
     teacher_id = Column(Integer, ForeignKey('teacher.id'))
     school_year = Column(Text(9))
     active = Column(Boolean, default=True) # if student is active in this class or not 
+    created_at = Column(DateTime, default=func.now())
+
 
     # preps = relationship(
     #     "Prep",

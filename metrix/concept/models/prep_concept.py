@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, Text, ForeignKey, Boolean, DateTime, func
 from sqlalchemy.orm import relationship
 from _models.base import Base
 
@@ -11,6 +11,7 @@ class PrepConcept(Base):
 
   concept = relationship("Concept") 
   prep = relationship("Prep", backref="concepts")
+  created_at = Column(DateTime, default=func.now())
 
 
 
