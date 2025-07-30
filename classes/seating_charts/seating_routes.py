@@ -8,11 +8,11 @@ from classes.seating_charts.models.layout import LayoutSchema
 
 router = APIRouter()
 
-@router.post("/layout")
+@router.post("/layout", response_model=LayoutSchema)
 def create_layout_router(data: dict= Body(...), db: Session = Depends(get_session)):
     return layout_services.create_layout(data, db)
 
-@router.get("/layout/{layout_id}")
+@router.get("/layout/{layout_id}", response_model=LayoutSchema)
 def get_layout_router(layout_id: int, db: Session = Depends(get_session)):
     return layout_services.get_layout(layout_id, db)
 
